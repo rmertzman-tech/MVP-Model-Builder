@@ -1,0 +1,62 @@
+// main.js — bootstrap & simple router
+
+import { createAgent, createWorld, sampleClaims } from './core.js';
+import { Tabs, View_ModelBuilder, View_GateEditor, View_Operators, View_Metrics, View_ChangeLog } from './components.js';
+
+const state = {
+  agent: createAgent('Student Agent'),
+  world: createWorld(),
+  claims: sampleClaims()
+};
+
+const TABS = [
+  { id:'model',   label:'Model Builder' },
+  { id:'gates',   label:'Gate Editor' },
+  { id:'ops',     label:'Operators' },
+  { id:'metrics', label:'Metrics' },
+  { id:'log',     label:'Change-Log' }
+];
+
+let active = 'model';
+
+function setState(next){
+  Object.assign(state, next);
+  render();
+}
+
+function render(){
+  Tabs(document.getElementById('tabs'), TABS, active, (id)=>{ active = id; render(); });
+  const view = document.getElementById('view');
+  view.innerHTML = '';
+
+  const mount = document.createElement('div');
+  view.appendChild(mount);
+
+  switch(active){
+    case 'model':   View_ModelBuilder(mount, state, setState); break;
+    case 'gates':   View_GateEditor(mount, state, setState);   break;
+    case 'ops':     View_Operators(mount, state, setState);    break;
+    case 'metrics': View_Metrics(mount, state);                break;
+    case 'log':     View_ChangeLog(mount, state);              break;
+  }
+
+  // export/import
+  const ioArea = document.getElementById('ioArea');
+  document.getElementById('btnExport').onclick = ()=>{
+    ioArea.value = JSON.stringify(state, null, 2);
+    ioArea.select(); document.execCommand('copy');
+  };
+  document.getElementById('btnImport').onclick = ()=>{
+    try{
+      const obj = JSON.parse(ioArea.value);
+      // very light validation
+      if (!obj || !obj.world || !obj.agent) throw new Error('Invalid shape');
+      Object.assign(state, obj);
+      render();
+    }catch(e){
+      alert('Import failed: '+e.message);
+    }
+  };
+}
+
+render();
