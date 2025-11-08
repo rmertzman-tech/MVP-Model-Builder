@@ -2,46 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
-  <title>FAIM-QIRF Demo • Ethics & Epistemic Justice</title>
-  <meta name="color-scheme" content="light only" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-    rel="stylesheet"
-  >
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FAIM-QIRF Agent Demo • Epistemic Justice & Formalism</title>
+
+  <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    html, body { height: 100%; }
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    .chip { @apply text-xs px-2 py-1 rounded-full bg-gray-100; }
-  </style>
+
+  <!-- React + Babel (CDN) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <link rel="stylesheet" href="./css/styles.css?v=1" />
 </head>
 <body class="bg-gray-50">
-  <header class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="#/home" class="font-bold text-lg">FAIM-QIRF • Demo</a>
-      <nav class="flex gap-3 text-sm">
-        <a class="hover:underline" href="#/playground">Playground</a>
-        <a class="hover:underline" href="#/philosophers">Philosophers</a>
-        <a class="hover:underline" href="#/labs">Injustice Labs</a>
-        <a class="hover:underline" href="#/repair">Repair</a>
-        <a class="hover:underline" href="#/about">About</a>
-      </nav>
-    </div>
-  </header>
+  <div id="root"></div>
 
-  <main id="app" class="max-w-7xl mx-auto px-4 py-6"></main>
+  <!-- Core (plain JS, attaches to window.FAIM) -->
+  <script src="./js/core/models.js?v=1"></script>
 
-  <footer class="border-t mt-10">
-    <div class="max-w-7xl mx-auto px-4 py-6 text-xs text-gray-500">
-      Demo is stateless. Use Export/Import to share a configuration. No tracking, no cookies.
-    </div>
-  </footer>
-
-  <script type="module" src="./app/main.js"></script>
+  <!-- UI modules (JSX via Babel) -->
+  <script type="text/babel" src="./js/components/ModelBuilder.js?v=1"></script>
+  <script type="text/babel" src="./js/components/GateEditor.js?v=1"></script>
+  <script type="text/babel" src="./js/components/OperatorPanel.js?v=1"></script>
+  <script type="text/babel" src="./js/components/MetricsDashboard.js?v=1"></script>
+  <script type="text/babel" src="./js/components/ChangeLog.js?v=1"></script>
+  <script type="text/babel" src="./js/App.js?v=1"></script>
 </body>
 </html>
