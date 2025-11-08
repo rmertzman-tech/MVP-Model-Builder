@@ -17,6 +17,11 @@
 </head>
 <body class="bg-gray-50">
   <div id="root"></div>
+  <script>
+  document.getElementById('root').insertAdjacentHTML('beforeend','<p style="padding:8px;color:#0a0">JS ran ✅</p>');
+  window.addEventListener('error', e => alert('JS error: ' + e.message));
+</script>
+
 
   <!-- Core (plain JS, attaches to window.FAIM) -->
   <script src="./js/core/models.js?v=1"></script>
