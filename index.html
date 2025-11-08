@@ -2,129 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>FAIM-QIRF Demo — Diagnostics</title>
+  <title>FAIM-QIRF Agent Formalism — Demo (No Tracking)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body{font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:20px;max-width:900px}
-    h1{margin:0 0 8px}
-    #root{margin-top:16px;padding:12px;border:1px solid #ddd;border-radius:12px}
-    #error-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);color:#fff;z-index:99999;display:none;overflow:auto;padding:16px}
-    #error-overlay h2{margin:0 0 8px}
-    #error-overlay pre{white-space:pre-wrap}
+    :root{--fg:#1f2937;--muted:#6b7280;--accent:#6d28d9;--bg:#f8fafc;--card:#ffffff;--ok:#065f46;--warn:#92400e;--err:#991b1b}
+    *{box-sizing:border-box} body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+    header{padding:18px 20px;background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff}
+    header h1{margin:0 0 6px;font-size:22px}
+    header p{margin:0;color:#e9d5ff}
+    .wrap{max-width:1100px;margin:18px auto;padding:0 16px}
+    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+    .tab{padding:8px 12px;border-radius:10px;background:#ede9fe;color:#4c1d95;border:1px solid #c4b5fd;cursor:pointer}
+    .tab[aria-selected="true"]{background:#4c1d95;color:#fff}
+    .card{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+    h2{margin:0 0 8px;font-size:18px} h3{margin:10px 0 6px;font-size:15px;color:#111827}
+    label{display:block;margin:10px 0 4px;font-weight:600}
+    input[type="text"], textarea, select{width:100%;padding:10px;border:1px solid #d1d5db;border-radius:10px;background:#fff}
+    textarea{min-height:90px}
+    .row{display:grid;gap:12px}
+    @media(min-width:900px){.row{grid-template-columns:1fr 1fr}}
+    .btn{display:inline-flex;align-items:center;gap:8px;background:#4c1d95;color:#fff;border:none;border-radius:10px;padding:8px 12px;cursor:pointer}
+    .btn.secondary{background:#6b7280}
+    .btn.ghost{background:#ede9fe;color:#4c1d95}
+    .btnbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid #ddd;background:#f9fafb;margin-right:6px}
+    .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
+    .grid{display:grid;gap:10px}
+    .kpi{padding:10px;border:1px solid #e5e7eb;border-radius:12px;background:#fafafa}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+    .muted{color:var(--muted)}
+    .list{display:grid;gap:8px}
+    .divider{height:1px;background:#e5e7eb;margin:12px 0}
+    .small{font-size:12px}
   </style>
-
-  <!-- Error overlay (catches errors even if console won’t open) -->
-  <script>
-  (function(){
-    function installOverlay(){
-      const o=document.createElement('div');
-      o.id='error-overlay';
-      o.innerHTML='<h2>Runtime error</h2><pre id="errpre"></pre>';
-      document.body.appendChild(o);
-      return o;
-    }
-    function show(msg){
-      const o=document.getElementById('error-overlay')||installOverlay();
-      o.style.display='block';
-      o.querySelector('#errpre').textContent=msg;
-    }
-    window.addEventListener('error', e=>{
-      const msg=[
-        'Message: '+e.message,
-        'Source: '+(e.filename||'unknown'),
-        'Line: '+(e.lineno||'?')+', Col: '+(e.colno||'?'),
-        e.error&&e.error.stack?('Stack:\\n'+e.error.stack):''
-      ].join('\\n');
-      show(msg);
-    });
-    window.addEventListener('unhandledrejection', e=>{
-      show('Unhandled Promise Rejection:\\n'+(e.reason&&e.reason.stack||e.reason));
-    });
-    window.onerror=function(message, source, lineno, colno, error){
-      const msg=[
-        'Message: '+message,
-        'Source: '+source,
-        'Line: '+lineno+', Col: '+colno,
-        error&&error.stack?('Stack:\\n'+error.stack):''
-      ].join('\\n');
-      show(msg);
-    };
-  })();
-  </script>
 </head>
 <body>
-  <h1>FAIM-QIRF Demo — Diagnostics Mode</h1>
-  <p>If something fails, an overlay will tell you what and where. Below, dependencies and local assets turn green when OK.</p>
+  <header>
+    <div class="wrap">
+      <h1>FAIM-QIRF Agent Formalism — Minimal Demo</h1>
+      <p>No tracking, no cookies. Export/Import your configuration as JSON when needed.</p>
+    </div>
+  </header>
 
-  <section id="deps">
-    <h2>Dependencies</h2>
-    <ul id="dep-list">
-      <li data-dep="React">React: <span>loading…</span></li>
-      <li data-dep="ReactDOM">ReactDOM: <span>loading…</span></li>
-      <li data-dep="Babel">Babel: <span>loading…</span></li>
-    </ul>
-  </section>
+  <main class="wrap">
+    <nav class="tabs" id="tabs"></nav>
+    <section id="view"></section>
 
-  <section id="assets">
-    <h2>Local assets</h2>
-    <p>(Adjust these names to match your files; they must be at the repo root or fix the paths.)</p>
-    <ul id="asset-list"></ul>
-  </section>
+    <div class="card">
+      <h2>Export / Import (JSON)</h2>
+      <div class="btnbar">
+        <button class="btn" id="btnExport">Export JSON</button>
+        <button class="btn ghost" id="btnImport">Import JSON</button>
+      </div>
+      <textarea id="ioArea" placeholder="Paste JSON here for Import, or click Export to copy current state."></textarea>
+    </div>
+  </main>
 
-  <div id="root"></div>
-
-  <!-- CDN deps — note crossorigin to avoid “Script error.” -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.25.0/babel.min.js" crossorigin="anonymous"></script>
-
-  <!-- Dependency + file existence checks -->
-  <script>
-    function markDeps(){
-      document.querySelectorAll('#dep-list li').forEach(li=>{
-        const dep=li.getAttribute('data-dep');
-        const ok=!!window[dep];
-        li.querySelector('span').textContent=ok?'OK':'MISSING';
-        li.style.color=ok?'green':'red';
-      });
-    }
-    markDeps();
-
-    // List your expected local JS files here (edit names/paths as needed)
-    const expectedLocalFiles = [
-      './core.js',
-      './operators.js',
-      './components.js',
-      './app.js'
-    ];
-    const ul=document.getElementById('asset-list');
-    expectedLocalFiles.forEach(path=>{
-      const li=document.createElement('li');
-      li.textContent=path+' → checking…';
-      ul.appendChild(li);
-      fetch(path,{cache:'no-store'}).then(r=>{
-        li.textContent=path+' → '+(r.ok?'OK':'NOT FOUND ('+r.status+')');
-        li.style.color=r.ok?'green':'red';
-      }).catch(err=>{
-        li.textContent=path+' → ERROR '+err;
-        li.style.color='red';
-      });
-    });
-  </script>
-
-  <!-- Minimal sanity check: React + Babel render -->
-  <script type="text/babel">
-    function Hello(){ return <div>Hello from React + Babel ✅</div>; }
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<Hello />);
-  </script>
-
-  <!-- Now load YOUR app files (uncomment one at a time when Hello works) -->
-  <!--
-  <script type="text/babel" src="./core.js"></script>
-  <script type="text/babel" src="./operators.js"></script>
-  <script type="text/babel" src="./components.js"></script>
-  <script type="text/babel" src="./app.js"></script>
-  -->
+  <!-- App -->
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>
