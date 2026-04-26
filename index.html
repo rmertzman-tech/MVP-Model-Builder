@@ -659,30 +659,7 @@ async function callClaude(system,messages,maxTokens){
   return (data.content && data.content[0] && data.content[0].text) || '';
 }
 
-async function testApiKey(){
-  var btn = document.getElementById('test-key-btn');
-  var result = document.getElementById('test-key-result');
-  if(btn) btn.disabled = true;
-  if(result){result.style.display='block'; result.textContent='Testing connection...';}
-  try{
-    var text = await callClaude('Reply with exactly: CONNECTION_OK', [{role:'user',content:'test'}], 20);
-    if(result){
-      result.style.background='#dcfce7'; result.style.borderColor='#14532d'; result.style.color='#14532d';
-      result.textContent = '\u2713 Connection working. Profile generation is ready.';
-    }
-  } catch(e){
-    console.error('[Examined] Test failed:', e);
-    var msg = '\u2717 ';
-    if(e.message.includes('NETWORK_ERROR')) msg += 'Cannot reach the server. Check your internet connection.';
-    else if(e.message.includes('HTTP_5')) msg += 'Server error. The UCP backend may be waking up (give it 30 seconds and try again).';
-    else msg += 'Error: ' + e.message;
-    if(result){
-      result.style.background='#fee2e2'; result.style.borderColor='#7f1d1d'; result.style.color='#7f1d1d';
-      result.textContent = msg;
-    }
-  }
-  if(btn) btn.disabled = false;
-}
+
 
 // Test the API key with a minimal call
 async function testApiKey(){
@@ -1070,7 +1047,7 @@ function saveCoherence(){
     displayCurrentLoad(load);
   }
   var btn=document.querySelector('button[onclick="saveCoherence()"]');
-  if(btn){btn.textContent='Saved ✓';setTimeout(function(){btn.textContent='Save today’s reading';},1800);}
+  if(btn){btn.textContent='Saved ✓';setTimeout(function(){btn.textContent='Save today\u2019s reading';},1800);}
 }
 function buildCoherenceChart(){
   var c=document.getElementById('coh-chart');if(!c)return;
