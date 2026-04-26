@@ -1,64 +1,1765 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>FAIM-QIRF Agent Formalism — Demo (No Tracking)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root{--fg:#1f2937;--muted:#6b7280;--accent:#6d28d9;--bg:#f8fafc;--card:#ffffff;--ok:#065f46;--warn:#92400e;--err:#991b1b}
-    *{box-sizing:border-box} body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
-    header{padding:18px 20px;background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff}
-    header h1{margin:0 0 6px;font-size:22px}
-    header p{margin:0;color:#e9d5ff}
-    .wrap{max-width:1100px;margin:18px auto;padding:0 16px}
-    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
-    .tab{padding:8px 12px;border-radius:10px;background:#ede9fe;color:#4c1d95;border:1px solid #c4b5fd;cursor:pointer}
-    .tab[aria-selected="true"]{background:#4c1d95;color:#fff}
-    .card{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-    h2{margin:0 0 8px;font-size:18px} h3{margin:10px 0 6px;font-size:15px;color:#111827}
-    label{display:block;margin:10px 0 4px;font-weight:600}
-    input[type="text"], textarea, select{width:100%;padding:10px;border:1px solid #d1d5db;border-radius:10px;background:#fff}
-    textarea{min-height:90px}
-    .row{display:grid;gap:12px}
-    @media(min-width:900px){.row{grid-template-columns:1fr 1fr}}
-    .btn{display:inline-flex;align-items:center;gap:8px;background:#4c1d95;color:#fff;border:none;border-radius:10px;padding:8px 12px;cursor:pointer}
-    .btn.secondary{background:#6b7280}
-    .btn.ghost{background:#ede9fe;color:#4c1d95}
-    .btnbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-    .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid #ddd;background:#f9fafb;margin-right:6px}
-    .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
-    .grid{display:grid;gap:10px}
-    .kpi{padding:10px;border:1px solid #e5e7eb;border-radius:12px;background:#fafafa}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
-    .muted{color:var(--muted)}
-    .list{display:grid;gap:8px}
-    .divider{height:1px;background:#e5e7eb;margin:12px 0}
-    .small{font-size:12px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Examined — Your Personal Philosophy Laboratory</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#f8f6f1;--s:#eeeae1;--s2:#e4dfd4;--border:rgba(60,50,30,.12);
+  --ink:#1a1612;--teal:#0D5E57;--tl:#e8f4f2;--amber:#92400e;--al:#fef3c7;
+  --muted:rgba(26,22,18,.42);--red:#7f1d1d;--green:#14532d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(circle at 15% 85%,rgba(13,94,87,.06) 0%,transparent 50%),
+    radial-gradient(circle at 85% 15%,rgba(146,64,14,.04) 0%,transparent 50%)}
+/* LANDING */
+.landing{min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:2rem;text-align:center}
+.landing-mark{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;
+  color:var(--teal);letter-spacing:-.02em;line-height:1;margin-bottom:.4rem}
+.landing-sub{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-style:italic;
+  color:var(--muted);margin-bottom:.3rem}
+.landing-tag{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:2.5rem}
+.landing-body{max-width:520px;font-size:1rem;line-height:1.85;
+  color:rgba(26,22,18,.75);margin-bottom:2rem}
+.privacy-badge{display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'DM Mono',monospace;font-size:.6rem;color:var(--teal);
+  border:1px solid rgba(13,94,87,.25);border-radius:2rem;
+  padding:.2rem .6rem;background:var(--tl);margin:.5rem 0}
+/* WORKSPACE */
+.workspace{display:none;max-width:740px;margin:0 auto;padding:2rem 1.5rem}
+.phase-lbl{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--teal);margin-bottom:.3rem}
+.phase-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;
+  margin-bottom:.5rem;line-height:1.2}
+.phase-desc{font-size:.9rem;line-height:1.8;color:rgba(26,22,18,.7);margin-bottom:1.5rem}
+/* NAV TABS */
+.nav-tabs{display:flex;gap:.3rem;overflow-x:auto;padding:.6rem 0;margin-bottom:1rem;
+  border-bottom:1px solid var(--border)}
+.ntb{flex-shrink:0;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.07em;
+  text-transform:uppercase;padding:.4rem .85rem;border-radius:.3rem;
+  border:1px solid var(--border);background:transparent;color:var(--muted);
+  cursor:pointer;transition:all .18s;white-space:nowrap}
+.ntb:hover{color:var(--ink)}
+.ntb.active{background:var(--teal);color:white;border-color:var(--teal);font-weight:500}
+.tab-pane{display:none}.tab-pane.active{display:block;animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+/* PRF */
+.prf-q{background:white;border:1px solid var(--border);border-radius:.5rem;
+  overflow:hidden;margin:.65rem 0;transition:all .2s}
+.prf-q.answered{border-color:rgba(13,94,87,.3);background:var(--tl)}
+.prf-q-text{padding:.9rem 1.1rem;font-size:.9rem;line-height:1.75;font-weight:500}
+.prf-opts{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;
+  padding:.75rem 1.1rem;padding-top:0}
+.prf-opt{padding:.5rem .75rem;border:1px solid var(--border);border-radius:.35rem;
+  cursor:pointer;font-size:.82rem;line-height:1.45;transition:all .18s;background:var(--bg)}
+.prf-opt:hover{border-color:var(--teal);background:var(--tl)}
+.prf-opt.selected{background:var(--teal);color:white;border-color:var(--teal)}
+.progress-bar{height:3px;background:var(--s2);border-radius:2px;margin:.75rem 0;overflow:hidden}
+.progress-fill{height:100%;background:var(--teal);border-radius:2px;transition:width .5s ease}
+/* ASSEMBLY */
+.asm-q{margin:1.2rem 0}
+.asm-lbl{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;
+  line-height:1.65;margin-bottom:.5rem;color:var(--ink)}
+.asm-num{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--teal);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:.2rem}
+textarea{width:100%;min-height:100px;border:1px solid var(--border);border-radius:.4rem;
+  padding:.75rem;font-family:'DM Sans',sans-serif;font-size:.88rem;line-height:1.7;
+  background:white;color:var(--ink);resize:vertical;transition:border-color .15s}
+textarea:focus{outline:none;border-color:var(--teal)}
+/* PROFILE */
+.profile-card{background:white;border:1px solid rgba(13,94,87,.2);border-radius:.65rem;
+  padding:1.8rem;margin:1rem 0;box-shadow:0 2px 20px rgba(13,94,87,.06)}
+.profile-header{font-family:'Cormorant Garamond',serif;font-size:1.65rem;
+  font-weight:500;color:var(--teal);margin-bottom:.25rem}
+.profile-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.1rem}
+.profile-body{font-size:.93rem;line-height:1.88;color:rgba(26,22,18,.82)}
+.profile-body p{margin-bottom:.9rem}
+/* CHAT */
+.chat-container{background:white;border:1px solid var(--border);border-radius:.6rem;
+  overflow:hidden;margin:1rem 0}
+.chat-messages{min-height:300px;max-height:480px;overflow-y:auto;padding:1.2rem;
+  display:flex;flex-direction:column;gap:.8rem}
+.msg{max-width:82%;padding:.75rem 1rem;border-radius:.5rem;font-size:.88rem;line-height:1.72}
+.msg.user{align-self:flex-end;background:var(--teal);color:white;
+  border-radius:.5rem .5rem 0 .5rem}
+.msg.assistant{align-self:flex-start;background:var(--s);
+  border-radius:.5rem .5rem .5rem 0}
+.msg.thinking{align-self:flex-start;background:var(--s);
+  border-radius:.5rem .5rem .5rem 0;font-style:italic;color:var(--muted)}
+.chat-input-row{display:flex;gap:.5rem;padding:.75rem;
+  border-top:1px solid var(--border);background:var(--s)}
+.chat-input{flex:1;border:1px solid var(--border);border-radius:.35rem;
+  padding:.55rem .75rem;font-family:'DM Sans',sans-serif;font-size:.88rem;
+  background:white;color:var(--ink)}
+.chat-input:focus{outline:none;border-color:var(--teal)}
+/* COHERENCE */
+.coherence-domains{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin:.75rem 0}
+@media(max-width:560px){.coherence-domains{grid-template-columns:repeat(3,1fr)}}
+.domain-card{background:white;border:1px solid var(--border);border-radius:.4rem;
+  padding:.65rem;text-align:center}
+.domain-name{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--teal);
+  text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem}
+input[type=range]{width:100%;-webkit-appearance:none;height:3px;border-radius:2px;
+  background:var(--s2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+  border-radius:50%;background:var(--teal);cursor:pointer}
+.domain-val{font-family:'Cormorant Garamond',serif;font-size:1.4rem;
+  color:var(--teal);margin-top:.2rem}
+/* ARCHIVE */
+.archive-entry{background:white;border:1px solid var(--border);border-radius:.4rem;
+  padding:.85rem;margin:.5rem 0}
+.archive-date{font-family:'DM Mono',monospace;font-size:.6rem;
+  color:var(--muted);margin-bottom:.25rem}
+.archive-text{font-size:.86rem;line-height:1.65;color:var(--ink)}
+/* BUTTONS */
+.btn{background:var(--teal);color:white;border:none;font-family:'DM Sans',sans-serif;
+  font-weight:500;font-size:.88rem;padding:.6rem 1.4rem;border-radius:.35rem;
+  cursor:pointer;transition:all .18s}
+.btn:hover{background:#0a4d47}.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-out{background:transparent;color:var(--teal);border:1px solid var(--teal)}
+.btn-out:hover{background:var(--tl)}
+.panel{border-radius:.45rem;padding:.9rem 1.1rem;margin:.7rem 0;
+  font-size:.88rem;line-height:1.72}
+.panel.teal{background:var(--tl);border-left:3px solid var(--teal)}
+.panel.amber{background:var(--al);border-left:3px solid var(--amber)}
+/* TWIN CARDS */
+.twin-card{background:white;border:1px solid var(--border);border-radius:.5rem;
+  padding:1.1rem;cursor:pointer;transition:all .2s;margin:.65rem 0}
+.twin-card:hover{border-color:var(--teal);box-shadow:0 2px 12px rgba(13,94,87,.08)}
+/* COHERENCE CHART */
+.coh-chart{background:white;border:1px solid var(--border);border-radius:.5rem;
+  padding:1rem;margin:.75rem 0;min-height:100px;display:flex;align-items:flex-end;
+  padding-bottom:.5rem;gap:.3rem}
+.coh-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:.2rem}
+.coh-bar{width:22px;border-radius:2px 2px 0 0;min-height:4px;transition:height .8s ease}
+.coh-lbl{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted)}
+/* LOADING */
+.loading-wrap{text-align:center;padding:3rem}
+.loading-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;
+  color:var(--teal);margin-bottom:.5rem}
+.loading-sub{font-size:.85rem;color:var(--muted)}
+</style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <h1>FAIM-QIRF Agent Formalism — Minimal Demo</h1>
-      <p>No tracking, no cookies. Export/Import your configuration as JSON when needed.</p>
-    </div>
-  </header>
 
-  <main class="wrap">
-    <nav class="tabs" id="tabs"></nav>
-    <section id="view"></section>
-
-    <div class="card">
-      <h2>Export / Import (JSON)</h2>
-      <div class="btnbar">
-        <button class="btn" id="btnExport">Export JSON</button>
-        <button class="btn ghost" id="btnImport">Import JSON</button>
+  <!-- FIRST-ENTRY DISCLOSURE MODAL -->
+  <div id="disclosure-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:center;justify-content:center;padding:1rem">
+    <div style="background:#fff;border-radius:.6rem;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;padding:1.75rem 2rem;box-shadow:0 8px 40px rgba(0,0,0,.25)">
+      <div style="font-family:monospace;font-size:.6rem;color:#0D5E57;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Before you begin</div>
+      <h2 style="font-family:serif;font-size:1.6rem;font-weight:400;color:#1a1612;margin:0 0 1rem;line-height:1.3">A note on privacy and purpose</h2>
+      <div style="font-size:.88rem;line-height:1.8;color:#374151">
+        <p style="margin:0 0 .75rem"><strong>What this tool is:</strong> Examined is a philosophical reflection tool supporting self-knowledge and values clarification. It is not a mental health service, not a substitute for therapy or counseling, and not designed for clinical use.</p>
+        <p style="margin:0 0 .75rem"><strong>Your data stays in your browser:</strong> Your essays, profile, coherence readings, and conversation archive are stored only in this browser. Philosophy Lab Corporation has no database and cannot see what you write.</p>
+        <p style="margin:0 0 .75rem"><strong>When you use the Companion, messages are transmitted:</strong> Each message travels via an encrypted connection (HTTPS/TLS — the same standard used for online banking) to Anthropic’s Claude API. Anthropic processes your message and a summary of your profile to generate a response. The connection is encrypted in transit — it cannot be read by anyone in between. Anthropic does not train its models on API data.</p>
+        <p style="margin:0 0 .75rem"><strong>Write only what you are comfortable transmitting to a third-party AI service.</strong> If you prefer not to transmit, use Local Reflection mode in the Companion tab.</p>
+        <p style="margin:0 0 .75rem"><strong>If you are in crisis:</strong> If you are experiencing thoughts of harming yourself or others, please contact a mental health professional or call or text <strong>988</strong> (Suicide &amp; Crisis Lifeline) rather than continuing with this app right now.</p>
+        <p style="margin:0"><strong>This tool is designed for adults.</strong> If you are under 18, please seek a parent or guardian’s guidance before using it.</p>
       </div>
-      <textarea id="ioArea" placeholder="Paste JSON here for Import, or click Export to copy current state."></textarea>
+      <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(60,50,30,.1)">
+        <button onclick="acknowledgeDisclosure()" style="background:#0D5E57;color:#fff;border:none;border-radius:.4rem;padding:.6rem 1.5rem;font-size:.92rem;cursor:pointer;font-family:sans-serif">I understand — begin →</button>
+        <div style="font-size:.78rem;color:rgba(26,22,18,.45);font-style:italic">You can review this in the About tab at any time.</div>
+      </div>
     </div>
-  </main>
+  </div>
 
-  <!-- App -->
-  <script type="module" src="./js/main.js"></script>
+
+<!-- LANDING PAGE -->
+<div class="landing" id="landing">
+  <div class="landing-mark">Examined</div>
+  <div class="landing-sub">Your Personal Philosophy Laboratory</div>
+  <div class="landing-tag">Philosophy Lab Corporation &middot; Powered by UCP V5.02</div>
+  <p class="landing-body">Not a personality test. Not a chatbot. A living model of yourself as a moral agent moving through time &mdash; built from your own responses, held in your own device, and deepened by your own reflection.<br><br>The examined life begins with a fifteen-minute encounter.</p>
+  <div class="privacy-badge">&#128274; Your reflections are stored only on your device</div>
+  <br>
+  <button class="btn" onclick="beginJourney()" style="font-size:1rem;padding:.8rem 2.2rem;margin-top:.75rem">Begin the examination &rarr;</button>
+  <div style="margin-top:1.2rem;display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center">
+    <button class="btn btn-out" id="restore-btn" onclick="checkBrowserRestore()" style="font-size:.83rem">&#128274; Continue my previous session</button>
+    <button class="btn btn-out" onclick="hardReset()" style="font-size:.83rem;color:var(--muted);border-color:var(--border)">Clear and restart</button>
+  </div>
+  <div id="import-area" style="display:none;margin-top:.75rem">
+    <button class="btn" onclick="importTwin()" style="font-size:.83rem">&#128193; Load twin from file</button>
+  </div>
+</div>
+
+<!-- WORKSPACE -->
+<div class="workspace" id="workspace">
+  <div class="nav-tabs">
+    <!-- Persistent guide: shown after profile generated -->
+    <button id="guide-btn" onclick="showGuide()" title="How to use Examined" style="display:none;position:absolute;right:.75rem;top:.75rem;background:transparent;border:1px solid rgba(13,94,87,.3);color:#0D5E57;border-radius:50%;width:1.6rem;height:1.6rem;font-size:.8rem;cursor:pointer;z-index:10;font-family:'DM Mono',monospace;line-height:1;padding:0">?</button>
+    <button class="ntb active" onclick="swTab('profile')">My Profile</button>
+    <button class="ntb" onclick="swTab('twin')">My Twin</button>
+    <button class="ntb" onclick="swTab('companion')">Companion</button>
+    <button class="ntb" onclick="swTab('coherence')">Coherence</button>
+    <button class="ntb" onclick="swTab('archive')">Archive</button>
+    <button class="ntb" onclick="swTab('about')" style="font-size:.78rem;color:rgba(26,22,18,.5)">About</button>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div class="tab-pane active" id="pane-profile">
+
+    <!-- 0: Starting screen -->
+    <div id="profile-start">
+      <div class="phase-lbl">Begin here</div>
+      <h2 class="phase-title">Your philosophical profile</h2>
+      <p class="phase-desc">Two steps, fifteen minutes. First, twenty-two scenario questions that map your moral architecture. Then, six questions about your life and how you became who you are. Together they generate a personal philosophical profile that describes not just your values but your specific way of inhabiting them.</p>
+      <p class="phase-desc" style="margin-top:.6rem;font-style:italic;color:rgba(26,22,18,.65);font-size:.93rem;line-height:1.75">The Examined app holds that you are a moral agent — a being with values, history, and commitments that are genuinely yours. It holds equally that everyone you encounter is the same kind of being. Self-examination and the recognition of others as self-examining beings are not separate tasks. They are the same project, approached from the inside.</p>
+      <div class="panel teal" style="line-height:1.7">
+        <strong>What stays on your device:</strong> Your profile, essays, coherence readings, and archive are stored only in this browser. Philosophy Lab Corporation has no database and cannot access what you write.<br><br>
+        <strong>What is transmitted when you use the Companion:</strong> When you send a message, it travels encrypted (HTTPS/TLS) to a secure proxy, then to Anthropic’s Claude API to generate a response. Anthropic processes your message and a summary of your profile context. This is how the Companion works. The transmission is encrypted in transit — it cannot be read by anyone in between.<br><br>
+        <strong>What Anthropic does with it:</strong> Anthropic processes your messages to generate responses and does not use API data to train its models. Your data is subject to Anthropic’s privacy policy. Do not write anything you would not be comfortable transmitting to a third-party AI service.<br><br>
+        <strong>This tool is not a mental health service.</strong> If you are experiencing a mental health crisis, please contact a professional or call or text <strong>988</strong> (Suicide &amp; Crisis Lifeline).
+      </div>
+      <div id="no-key-notice" style="display:none;background:#fef3c7;border:1px solid #92400e;border-left:4px solid #92400e;border-radius:.4rem;padding:.9rem 1.1rem;margin:.75rem 0;font-size:.88rem;color:#1a1612;line-height:1.7">
+        <strong>Connection issue.</strong><br>
+        Cannot reach the course server. Please check your internet connection, wait 30 seconds (the server may be waking up), and try the "Test API connection" button.
+      </div>
+      <div style="margin-top:1.25rem;display:flex;gap:.65rem;flex-wrap:wrap;align-items:center">
+        <button class="btn" onclick="startAssessment()">Begin the assessment &rarr;</button>
+        <button class="btn btn-out" id="test-key-btn" onclick="testApiKey()" style="font-size:.82rem">Test API connection</button>
+      </div>
+      <div id="test-key-result" style="display:none;margin-top:.65rem;padding:.65rem .9rem;border-radius:.35rem;border:1px solid;font-size:.84rem;line-height:1.6;font-family:'DM Mono',monospace"></div>
+    </div>
+
+    <!-- 1: PRF22 -->
+    <div id="profile-assess" style="display:none">
+      <div class="phase-lbl">Step 1 of 2 &mdash; Your Moral Architecture</div>
+      <h2 class="phase-title">Twenty-two scenarios</h2>
+      <p class="phase-desc">Select the answer that feels most true to how you actually think &mdash; not how you believe you should think. There are no right answers.</p>
+      <div class="progress-bar"><div class="progress-fill" id="prf-progress" style="width:0%"></div></div>
+      <div id="prf-questions"></div>
+      <div style="margin-top:1rem">
+        <button class="btn" id="prf-next-btn" onclick="finishPRF()" disabled>Continue to Assembly History &rarr;</button>
+      </div>
+    </div>
+
+    <!-- 2: Assembly History -->
+    <div id="profile-assembly" style="display:none">
+      <div class="phase-lbl">Step 2 of 2 &mdash; Your Assembly History</div>
+      <h2 class="phase-title">Six questions</h2>
+      <p class="phase-desc">These are not a survey. Each one is an invitation to investigate something that is already in your experience, from a vantage point you may not have previously occupied. Take your time. Be specific.</p>
+      <div id="assembly-questions"></div>
+      <div style="margin-top:1.5rem">
+        <button class="btn" id="asm-btn" onclick="generateProfile()" disabled>Generate my profile &rarr;</button>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.5rem">At least 4 responses needed &bull; Generation takes 15&ndash;25 seconds</div>
+      </div>
+    </div>
+
+    <!-- 3: Loading -->
+    <div id="profile-loading" style="display:none">
+      <div class="loading-wrap">
+        <div class="loading-title">Building your model&hellip;</div>
+        <div class="loading-sub">Reading your assembly history &bull; Mapping your moral architecture</div>
+        <div style="margin-top:1.5rem;font-size:1.8rem">&#129300;</div>
+      </div>
+    </div>
+
+    <!-- 4: Profile result -->
+    <div id="profile-result" style="display:none">
+      <div class="phase-lbl">Your Profile</div>
+      <div class="profile-card" id="profile-card-content"></div>
+
+      <!-- WHAT TO DO NEXT: appears after profile generation -->
+      <div id="next-steps-panel" style="margin:1rem 0;border:2px solid #0D5E57;border-radius:.5rem;overflow:hidden">
+        <div style="background:#0D5E57;padding:.65rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleNextSteps()">
+          <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:#fff;text-transform:uppercase;letter-spacing:.1em">What to do next — a guided start</span>
+          <span id="next-steps-chevron" style="color:#fff;font-size:.85rem;transition:transform .2s">▾</span>
+        </div>
+        <div id="next-steps-body" style="background:#f8f6f1;padding:0">
+
+          <!-- Step 1 -->
+          <div class="nxt-step" style="padding:.85rem 1rem;border-bottom:1px solid rgba(13,94,87,.12)">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="background:#0D5E57;color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem">1</div>
+              <div>
+                <div style="font-weight:500;font-size:.9rem;margin-bottom:.2rem">Read your profile slowly</div>
+                <div style="font-size:.83rem;color:rgba(26,22,18,.65);line-height:1.6">Notice what feels precisely right, and what feels slightly off or missing. Both are useful. The profile is a first approximation, not a final word. The parts that miss you are where your examination has the most territory to explore.</div>
+                <button class="btn btn-out btn-sm" onclick="enrichProfile()" style="margin-top:.55rem;font-size:.8rem;padding:.38rem .9rem;border-color:#0D5E57;color:#0D5E57">&#9998; Add to or revise your answers</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="nxt-step" style="padding:.85rem 1rem;border-bottom:1px solid rgba(13,94,87,.12)">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="background:#0D5E57;color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem">2</div>
+              <div>
+                <div style="font-weight:500;font-size:.9rem;margin-bottom:.2rem">Bring something real to the Companion</div>
+                <div style="font-size:.83rem;color:rgba(26,22,18,.65);line-height:1.6">The Companion is not a chatbot and not a therapist. It holds your specific model and helps you think from within it. <strong>Reflect mode</strong> is the best starting point: bring a real situation — a decision you are navigating, a tension you are living with, something that is pulling you in two directions. The Companion will engage with it using your actual framework, not a generic one.</div>
+                <button class="btn btn-sm" onclick="swTab('companion');setMode('reflect')" style="margin-top:.55rem;font-size:.8rem;padding:.38rem .9rem">Open Companion in Reflect mode →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="nxt-step" style="padding:.85rem 1rem;border-bottom:1px solid rgba(13,94,87,.12)">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="background:#5B21B6;color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem">3</div>
+              <div>
+                <div style="font-weight:500;font-size:.9rem;margin-bottom:.2rem">Explore forward or backward</div>
+                <div style="font-size:.83rem;color:rgba(26,22,18,.65);line-height:1.6"><strong>Explore mode</strong> takes you forward: a decision you haven’t made yet, a future you are trying to imagine, a possibility you want to think through before committing to it. <strong>Experiment mode</strong> takes you backward: a choice you have already made that you want to understand better, a counterfactual, a moment from your past that still shapes how you see things now. Use whichever matches what is live for you.</div>
+                <div style="display:flex;gap:.4rem;margin-top:.55rem;flex-wrap:wrap">
+                  <button class="btn btn-sm" onclick="swTab('companion');setMode('explore')" style="font-size:.8rem;padding:.38rem .9rem">Explore forward →</button>
+                  <button class="btn btn-out btn-sm" onclick="swTab('companion');setMode('experiment')" style="font-size:.8rem;padding:.38rem .9rem">Experiment backward →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="nxt-step" style="padding:.85rem 1rem;border-bottom:1px solid rgba(13,94,87,.12)">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="background:#0D5E57;color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem">4</div>
+              <div>
+                <div style="font-weight:500;font-size:.9rem;margin-bottom:.2rem">Archive what matters</div>
+                <div style="font-size:.83rem;color:rgba(26,22,18,.65);line-height:1.6">After a Companion exchange that felt significant — where something clicked, or where you saw something you hadn’t seen before — save it to the archive. The archive is the beginning of a longitudinal record of your examination. Over time it becomes more valuable than any single session. The profile revision at 90 days uses archived exchanges as additional context.</div>
+                <button class="btn btn-out btn-sm" onclick="swTab('archive')" style="margin-top:.55rem;font-size:.8rem;padding:.38rem .9rem">See the archive →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="nxt-step" style="padding:.85rem 1rem;border-bottom:1px solid rgba(13,94,87,.12)">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="background:#92400e;color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem">5</div>
+              <div>
+                <div style="font-weight:500;font-size:.9rem;margin-bottom:.2rem">Check in when something changes</div>
+                <div style="font-size:.83rem;color:rgba(26,22,18,.65);line-height:1.6">The six-domain coherence check-in is not a daily obligation. Use it when you notice something shifting — when your energy is low, when a situation is consuming more than it should, when you feel less like yourself than usual, or when something has gone better than expected and you want to notice why. The trajectory over time is more informative than any single reading.</div>
+                <button class="btn btn-out btn-sm" onclick="swTab('coherence')" style="margin-top:.55rem;font-size:.8rem;padding:.38rem .9rem">Coherence check-in →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 6: When depleted -->
+          <div class="nxt-step" style="padding:.85rem 1rem;border-bottom:1px solid rgba(13,94,87,.12)">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="background:#0D5E57;color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem">6</div>
+              <div>
+                <div style="font-weight:500;font-size:.9rem;margin-bottom:.2rem">When you can’t examine — recover first</div>
+                <div style="font-size:.83rem;color:rgba(26,22,18,.65);line-height:1.6">There are moments when asking deeper questions costs more than it gives. When you’re exhausted, overwhelmed, or feel like everything is too much, the Companion’s <strong>Recover mode</strong> helps you reduce load before returning to examination. Low coherence is not failure. It is information about what you need. Recovery Mode identifies the kind of burden you are carrying and offers specific next steps calibrated to that burden at whatever depth feels possible.</div>
+                <button class="btn btn-sm" onclick="swTab('companion');setMode('recover')" style="margin-top:.55rem;font-size:.8rem;padding:.38rem .9rem;background:#0D5E57">Recover mode →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- The longer view -->
+          <div class="nxt-step" style="padding:.85rem 1rem;background:rgba(13,94,87,.04)">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="color:#0D5E57;font-size:1.1rem;flex-shrink:0;margin-top:.1rem">∞</div>
+              <div>
+                <div style="font-weight:500;font-size:.9rem;margin-bottom:.2rem">The longer view</div>
+                <div style="font-size:.83rem;color:rgba(26,22,18,.65);line-height:1.6">The profile becomes more precise as you use the Companion and archive significant exchanges. At 90 days, a revised profile uses everything you’ve archived as additional context — the model grows with you. The examined life is not a one-time event. It is a practice. This app is infrastructure for that practice — not a replacement for the thinking, only a space that makes the thinking more possible.</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /next-steps-body -->
+      </div><!-- /next-steps-panel -->
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem">
+        <button class="btn" onclick="swTab('companion')">Open the Companion &rarr;</button>
+        <button class="btn btn-out" onclick="exportProfile()" title="Exports your profile as a text file to your device. Nothing is sent to any server during export.">&#11015; Export profile</button>
+      </div>
+      <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-out" onclick="enrichProfile()" style="font-size:.82rem;padding:.45rem 1rem;border-color:#0D5E57;color:#0D5E57">&#9998; Add to my answers &amp; regenerate</button>
+        <button class="btn btn-out" onclick="fullResetProfile()" style="font-size:.82rem;padding:.45rem 1rem;color:rgba(26,22,18,.45);border-color:rgba(26,22,18,.2)">&#8635; Start completely over</button>
+      </div>
+    </div>
+
+  </div><!-- end profile tab -->
+
+  <!-- TWIN TAB -->
+  <div class="tab-pane" id="pane-twin">
+    <div class="phase-lbl">Your Digital Twin</div>
+    <h2 class="phase-title">Three ways to explore your model</h2>
+    <p class="phase-desc">Your twin is a model of you as a moral agent moving through time. Explore it forward into possibility, backward into assembly, or inward into the present.</p>
+    <div class="twin-card" onclick="swTab('companion');setMode('explore')">
+      <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--teal);margin-bottom:.3rem">EXPLORE &rarr; The Vacation Planner</div>
+      <div style="font-size:.9rem;font-weight:500;margin-bottom:.25rem">Where could I go from here?</div>
+      <div style="font-size:.84rem;color:var(--muted);line-height:1.6">Given who you are, what does your specific moral architecture suggest about where you will flourish? What structural conditions should you seek? What practices are most protective for you specifically?</div>
+    </div>
+    <div class="twin-card" onclick="swTab('companion');setMode('experiment')">
+      <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--teal);margin-bottom:.3rem">EXPERIMENT &rarr; The Laboratory</div>
+      <div style="font-size:.9rem;font-weight:500;margin-bottom:.25rem">What else could I have been?</div>
+      <div style="font-size:.84rem;color:var(--muted);line-height:1.6">Explore counterfactual versions of yourself. What does the model predict about who you would have been under different conditions? What does the difference reveal?</div>
+    </div>
+    <div class="twin-card" onclick="swTab('companion');setMode('reflect')">
+      <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--teal);margin-bottom:.3rem">REFLECT &rarr; The Daily Companion</div>
+      <div style="font-size:.9rem;font-weight:500;margin-bottom:.25rem">What is happening right now?</div>
+      <div style="font-size:.84rem;color:var(--muted);line-height:1.6">Bring something from your actual life. A difficult situation, a moment of uncertainty, something you are proud of or something you regret. The Companion engages from within your specific framework.</div>
+    </div>
+  </div>
+
+  <!-- COMPANION TAB -->
+  <div class="tab-pane" id="pane-companion">
+    <div class="phase-lbl">Your Companion</div>
+    <div style="display:flex;gap:.4rem;margin-bottom:.75rem;flex-wrap:wrap">
+      <button class="btn btn-out" id="mode-explore" onclick="setMode('explore')" style="font-size:.78rem;padding:.35rem .75rem">Explore</button>
+      <button class="btn btn-out" id="mode-experiment" onclick="setMode('experiment')" style="font-size:.78rem;padding:.35rem .75rem">Experiment</button>
+      <button class="btn btn-out" id="mode-reflect" onclick="setMode('reflect')" style="font-size:.78rem;padding:.35rem .75rem">Reflect</button>
+      <button class="btn btn-out" id="mode-recover" onclick="setMode('recover')" style="font-size:.78rem;padding:.35rem .75rem;border-color:#0D5E57;color:#0D5E57">Recover</button>
+      <button class="btn btn-out" id="mode-local" onclick="setMode('local')" title="Write your own reflection without transmitting to any AI service" style="font-size:.78rem;padding:.35rem .75rem;border-color:rgba(60,50,30,.3);color:rgba(60,50,30,.55)">&#128274; Local Reflection</button>
+    </div>
+    <div id="mode-desc" class="panel teal" style="font-size:.84rem;margin-bottom:.75rem">Select a mode above, or simply begin a conversation.</div>
+
+    <!-- RECOVERY PANEL -->
+    <div id="recovery-panel" style="display:none;margin-bottom:.75rem">
+      <!-- Crisis note in Recovery Mode -->
+      <div style="background:#FEF2F2;border:1px solid rgba(153,27,27,.25);border-left:4px solid #991B1B;border-radius:.4rem;padding:.65rem .9rem;margin-bottom:.65rem;font-size:.82rem;line-height:1.65;color:#374151"><strong style="color:#991B1B">If you are in crisis:</strong> If you are experiencing thoughts of harming yourself or others, or feel unable to care for yourself, please call or text <strong>988</strong> (Suicide &amp; Crisis Lifeline) or contact a mental health professional. This app is not equipped to provide crisis support.</div>
+      <div style="background:linear-gradient(135deg,#e8f4f2,#f8f6f1);border:2px solid #0D5E57;border-radius:.5rem;padding:1.1rem 1.25rem;margin-bottom:.65rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#0D5E57;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem">Current Load</div>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <div id="load-meter" style="flex:1;height:8px;background:#e4dfd4;border-radius:4px;overflow:hidden">
+            <div id="load-fill" style="height:100%;background:#0D5E57;border-radius:4px;transition:width .6s ease;width:0%"></div>
+          </div>
+          <div id="load-label" style="font-family:'DM Mono',monospace;font-size:.85rem;color:#0D5E57;font-weight:500;white-space:nowrap">Calculate</div>
+        </div>
+        <div id="load-message" style="font-size:.78rem;color:rgba(26,22,18,.6);margin-top:.4rem;line-height:1.5"></div>
+      </div>
+
+      <!-- Step 1: Burden Type -->
+      <div id="rec-step1" style="background:#fff;border:1px solid rgba(60,50,30,.12);border-radius:.45rem;padding:1rem;margin-bottom:.65rem">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;margin-bottom:.6rem;color:#1a1612">What kind of burden feels strongest right now?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem">
+          <button class="rec-burden-btn" onclick="selectBurden('body')" style="text-align:left;padding:.6rem .8rem;border:1px solid rgba(60,50,30,.15);border-radius:.35rem;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .15s">
+            <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:#0D5E57;display:block;margin-bottom:.15rem">BODY</span>
+            Tired, tense, physically depleted
+          </button>
+          <button class="rec-burden-btn" onclick="selectBurden('time')" style="text-align:left;padding:.6rem .8rem;border:1px solid rgba(60,50,30,.15);border-radius:.35rem;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .15s">
+            <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:#0D5E57;display:block;margin-bottom:.15rem">TIME</span>
+            Everything feels urgent at once
+          </button>
+          <button class="rec-burden-btn" onclick="selectBurden('relationship')" style="text-align:left;padding:.6rem .8rem;border:1px solid rgba(60,50,30,.15);border-radius:.35rem;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .15s">
+            <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:#0D5E57;display:block;margin-bottom:.15rem">RELATIONSHIP</span>
+            Conflict, loneliness, or pressure from others
+          </button>
+          <button class="rec-burden-btn" onclick="selectBurden('structure')" style="text-align:left;padding:.6rem .8rem;border:1px solid rgba(60,50,30,.15);border-radius:.35rem;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .15s">
+            <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:#0D5E57;display:block;margin-bottom:.15rem">STRUCTURE</span>
+            Confusion, overload, no clear path
+          </button>
+          <button class="rec-burden-btn" onclick="selectBurden('identity')" style="text-align:left;padding:.6rem .8rem;border:1px solid rgba(60,50,30,.15);border-radius:.35rem;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .15s;grid-column:1/-1">
+            <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:#0D5E57;display:block;margin-bottom:.15rem">IDENTITY</span>
+            I don&apos;t feel like myself right now
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Recovery Depth -->
+      <div id="rec-step2" style="display:none;background:#fff;border:1px solid rgba(60,50,30,.12);border-radius:.45rem;padding:1rem;margin-bottom:.65rem">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;margin-bottom:.6rem;color:#1a1612">What level of help feels possible right now?</div>
+        <div style="display:flex;flex-direction:column;gap:.4rem">
+          <button class="rec-depth-btn" onclick="selectDepth('one_minute')" style="text-align:left;padding:.65rem .9rem;border:1px solid rgba(60,50,30,.15);border-radius:.35rem;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .15s">
+            <span style="font-weight:500">One-minute reset</span> <span style="color:rgba(26,22,18,.5);font-size:.8rem">&mdash; one small action, then continue</span>
+          </button>
+          <button class="rec-depth-btn" onclick="selectDepth('five_minute')" style="text-align:left;padding:.65rem .9rem;border:1px solid rgba(60,50,30,.15);border-radius:.35rem;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .15s">
+            <span style="font-weight:500">Five-minute recovery plan</span> <span style="color:rgba(26,22,18,.5);font-size:.8rem">&mdash; reduce load, restore capacity</span>
+          </button>
+          <button class="rec-depth-btn" onclick="selectDepth('conversation')" style="text-align:left;padding:.65rem .9rem;border:1px solid rgba(60,50,30,.15);border-radius:.35rem;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .15s">
+            <span style="font-weight:500">Reflective conversation</span> <span style="color:rgba(26,22,18,.5);font-size:.8rem">&mdash; work through it with the Companion</span>
+          </button>
+          <button class="rec-depth-btn" onclick="selectDepth('save_for_later')" style="text-align:left;padding:.65rem .9rem;border:1px solid rgba(60,50,30,.15);border-radius:.35rem;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .15s">
+            <span style="font-weight:500">Save this for later</span> <span style="color:rgba(26,22,18,.5);font-size:.8rem">&mdash; note it and return when I have capacity</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Recovery Actions -->
+      <div id="rec-step3" style="display:none;background:#fff;border:1px solid rgba(60,50,30,.12);border-radius:.45rem;padding:1rem;margin-bottom:.65rem">
+        <div id="rec-prompt" style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:rgba(26,22,18,.65);margin-bottom:.65rem;line-height:1.6"></div>
+        <div id="rec-actions" style="display:flex;flex-direction:column;gap:.35rem"></div>
+        <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn btn-sm" id="rec-note-btn" onclick="generateRecoveryNote()" style="font-size:.82rem;padding:.45rem 1rem">Generate Recovery Note</button>
+          <button class="btn btn-out btn-sm" onclick="resetRecovery()" style="font-size:.82rem;padding:.45rem 1rem">Different burden</button>
+        </div>
+      </div>
+
+      <!-- Recovery Note Output -->
+      <div id="rec-note-output" style="display:none;background:linear-gradient(135deg,#f8f6f1,#eeeae1);border:1px solid rgba(13,94,87,.2);border-radius:.45rem;padding:1rem;margin-bottom:.65rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#0D5E57;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem">Recovery Note</div>
+        <div id="rec-note-text" style="font-size:.88rem;line-height:1.75;color:#1a1612"></div>
+        <div style="margin-top:.65rem;display:flex;gap:.5rem">
+          <button class="btn btn-out btn-sm" onclick="archiveRecoveryNote()" style="font-size:.8rem;padding:.38rem .8rem">&#128190; Save to archive</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- LOCAL REFLECTION PANEL: no transmission mode -->
+    <div id="local-panel" style="display:none;margin-bottom:.75rem">
+      <div style="background:#f8f6f1;border:1px solid rgba(60,50,30,.15);border-radius:.45rem;padding:1rem">
+        <div style="font-family:monospace;font-size:.6rem;color:rgba(60,50,30,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">&#128274; Local Reflection — nothing transmitted</div>
+        <div id="local-prompt" style="font-family:serif;font-size:1.05rem;font-style:italic;color:#1a1612;margin-bottom:.7rem;line-height:1.65"></div>
+        <textarea id="local-text" placeholder="Write your reflection here. It will be saved to your archive when you save it. Nothing leaves your browser." style="width:100%;min-height:140px;padding:.7rem .85rem;font-family:sans-serif;font-size:.88rem;border:1px solid rgba(60,50,30,.18);border-radius:.35rem;background:#fff;resize:vertical;color:#1a1612;box-sizing:border-box;line-height:1.7"></textarea>
+        <div style="display:flex;gap:.5rem;margin-top:.65rem;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="saveLocalReflection()" style="font-size:.82rem;padding:.45rem 1rem">Save to archive</button>
+          <div style="font-size:.76rem;color:rgba(26,22,18,.4);font-style:italic;line-height:1.5;align-self:center">Saved entries appear in the Archive tab alongside Companion exchanges.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages">
+        <div class="msg assistant">Welcome. I am your Companion &mdash; part of the Examined system that holds your model and thinks alongside you. I know your profile and something of your assembly history. I will not tell you what to think or who to become. My role is to help you think more clearly from within your own perspective.<br><br>What would you like to examine today?</div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input" type="text" placeholder="What are you thinking about..." onkeydown="if(event.key==='Enter'&&!event.shiftKey)sendMessage()">
+        <button class="btn" onclick="sendMessage()">&#9654;</button>
+      </div>
+    </div>
+    <button class="btn btn-out" onclick="archiveLastExchange()" style="font-size:.8rem;margin-top:.4rem">&#128190; Save this to my archive</button>
+  </div>
+
+  <!-- COHERENCE TAB -->
+  <div class="tab-pane" id="pane-coherence">
+    <div class="phase-lbl">Daily Coherence Check-in</div>
+    <h2 class="phase-title">How are you today?</h2>
+    <p class="phase-desc">Five domains, one slider each. Thirty seconds. The trajectory over time is more informative than any single reading.</p>
+    <div class="coherence-domains" id="coherence-sliders"></div>
+    <div id="relational-question" style="display:none;margin-top:1.1rem;background:linear-gradient(135deg,#f8f6f1,#eeeae1);border:1px solid rgba(13,94,87,.2);border-radius:.45rem;padding:.9rem 1rem"><div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#0D5E57;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.45rem">A question to hold</div><p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:#1a1612;margin:0 0 .65rem;line-height:1.65">Is there anyone whose capacity to act from their values is being shaped — supported or limited — by your situation, decisions, or context right now?</p><p style="font-size:.8rem;color:rgba(26,22,18,.5);margin:0 0 .6rem;font-style:italic">You don’t need to solve this. Just notice it.</p><textarea id="relational-response" placeholder="A few words, or nothing at all…" style="width:100%;min-height:70px;padding:.6rem .75rem;font-family:'DM Sans',sans-serif;font-size:.88rem;border:1px solid rgba(60,50,30,.18);border-radius:.35rem;background:#fff;resize:vertical;color:#1a1612;box-sizing:border-box"></textarea></div>
+    <button class="btn" onclick="saveCoherence()" style="margin-top:.75rem">Save today&rsquo;s reading</button>
+    <div style="margin-top:1.5rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Your coherence trajectory</div>
+      <div class="coh-chart" id="coh-chart">
+        <div style="font-size:.84rem;color:var(--muted);font-style:italic;padding:.5rem">No readings yet. Complete your first check-in above.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHIVE TAB -->
+  <div class="tab-pane" id="pane-archive">
+    <div class="phase-lbl">Your Good Ancestor Archive</div>
+    <h2 class="phase-title">What you have examined</h2>
+    <p class="phase-desc">Every reflection you flag as significant lives here. Over time this becomes the record of your philosophical development.</p>
+    <div id="archive-list"></div>
+    <div id="archive-empty" style="text-align:center;padding:2rem;color:var(--muted);font-style:italic;display:none">
+      Nothing archived yet. Begin a Companion conversation and save the exchanges that feel significant.
+    </div>
+    <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap">
+      <button class="btn btn-out" onclick="exportArchive()">&#11015; Export archive</button>
+      <button class="btn btn-out" onclick="exportTwin()">&#128190; Backup full twin</button>
+      <div style="font-size:.78rem;color:rgba(26,22,18,.5);margin-bottom:.4rem;line-height:1.55">Your current session is already loaded from this browser automatically. Use <strong>Restore twin from file</strong> only to load data you previously exported as a JSON file &#8212; for example, to move your data to a different browser or device.</div>
+      <button class="btn btn-out" onclick="importTwin()">&#128193; Restore twin from file</button>
+      <button class="btn btn-out" onclick="generateLetter()">&#9997; Letter to future self</button>
+    </div>
+  </div>
+
+
+  <!-- ABOUT TAB -->
+  <div class="tab-pane" id="pane-about">
+    <div class="phase-lbl">About Examined</div>
+    <h2 class="phase-title">Privacy, purpose &amp; limits</h2>
+    <p class="phase-desc">What this tool is, what it does with your data, and what it cannot do. Read this before sharing sensitive material.</p>
+
+    <div style="background:#f8f6f1;border-radius:.5rem;padding:1.1rem 1.25rem;margin-bottom:.85rem">
+      <div style="font-family:monospace;font-size:.6rem;color:#0D5E57;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.45rem">What this tool is</div>
+      <p style="font-size:.86rem;line-height:1.75;color:#374151;margin:0">Examined is a philosophical reflection tool designed to support self-knowledge, values clarification, and examined life as a practice. It is <strong>not a mental health service</strong>, not a substitute for therapy or counseling, and not designed for clinical use. If you are experiencing a mental health difficulty, please speak with a qualified professional.</p>
+    </div>
+
+    <div style="background:#f8f6f1;border-radius:.5rem;padding:1.1rem 1.25rem;margin-bottom:.85rem">
+      <div style="font-family:monospace;font-size:.6rem;color:#0D5E57;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.45rem">Your data</div>
+      <p style="font-size:.86rem;line-height:1.75;color:#374151;margin:0 0 .55rem"><strong>What stays in your browser:</strong> Your profile, essays, archive, and coherence readings are stored only in this browser. Philosophy Lab Corporation has no database and cannot access what you write.</p>
+      <p style="font-size:.86rem;line-height:1.75;color:#374151;margin:0 0 .55rem"><strong>What is transmitted when you use the Companion:</strong> Each message travels via an encrypted connection (HTTPS/TLS — the same standard used for online banking) to a secure proxy, then to Anthropic’s Claude API. <strong>The connection is encrypted in transit — it cannot be read by anyone in between.</strong> Only Anthropic sees the content, processes it to generate your response, and does not train its models on API data.</p>
+      <p style="font-size:.86rem;line-height:1.75;color:#374151;margin:0">Your messages are subject to <a href="https://www.anthropic.com/privacy" target="_blank" style="color:#0D5E57">Anthropic’s privacy policy</a>. If you prefer not to transmit anything, use <strong>Local Reflection mode</strong> in the Companion tab.</p>
+    </div>
+
+    <div style="background:#f8f6f1;border-radius:.5rem;padding:1.1rem 1.25rem;margin-bottom:.85rem">
+      <div style="font-family:monospace;font-size:.6rem;color:#0D5E57;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.45rem">What to write and what not to write</div>
+      <p style="font-size:.86rem;line-height:1.75;color:#374151;margin:0">Write only what you are comfortable transmitting to a third-party AI service. You do not need to use your full name or include identifying information. The assembly history questions invite genuine reflection — the more specific you are, the more precise the profile. You remain in control of what you share.</p>
+    </div>
+
+    <div style="background:#FEF2F2;border:1px solid rgba(153,27,27,.2);border-left:4px solid #991B1B;border-radius:.4rem;padding:.85rem 1rem;margin-bottom:.85rem">
+      <div style="font-family:monospace;font-size:.6rem;color:#991B1B;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem">If you are in crisis</div>
+      <p style="font-size:.86rem;line-height:1.75;color:#374151;margin:0">If you are experiencing thoughts of harming yourself or others, or feel unable to care for yourself, please call or text <strong>988</strong> (Suicide &amp; Crisis Lifeline, available 24/7 in the US) or contact a mental health professional immediately. This app is not equipped to provide crisis support.</p>
+    </div>
+
+    <div style="background:#f8f6f1;border-radius:.5rem;padding:1.1rem 1.25rem;margin-bottom:.85rem">
+      <div style="font-family:monospace;font-size:.6rem;color:#0D5E57;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.45rem">For students</div>
+      <p style="font-size:.86rem;line-height:1.75;color:#374151;margin:0">Your participation is voluntary. Your instructor cannot see your profile, essays, or Companion conversations unless you explicitly share them. This app is not graded and your data is not accessible to Saint Petersburg College.</p>
+    </div>
+
+    <div style="font-size:.8rem;color:rgba(26,22,18,.4);margin-top:.75rem;line-height:1.7">
+      Philosophy Lab Corporation &bull; Examined &bull; 2026<br>
+      <a href="#" onclick="showDisclosureModal();return false;" style="color:#0D5E57">View initial disclosure again</a>
+    </div>
+  </div>
+
+</div><!-- end workspace -->
+
+<script>
+// ═══ CONFIGURATION ═══════════════════════════════════════════
+// API calls are handled by the UCP backend proxy.
+// No API key needed in this file.
+// To update the API key, set ANTHROPIC_API_KEY in Render dashboard.
+// ═════════════════════════════════════════════════════════════
+
+// ═══ STATE ═══
+var state={
+  workspace:false,profile:null,assembly:null,
+  prfScores:{care:0,fair:0,loyal:0,auth:0},
+  prfAnswers:{},asmAnswers:{},
+  chatHistory:[],currentMode:'reflect',
+  coherenceHistory:[],archive:[],recoveryHistory:[]
+};
+
+function loadState(){
+  var d=localStorage.getItem('examined_v2');
+  if(d){try{var s=JSON.parse(d);state=Object.assign(state,s);}catch(e){}}
+}
+function saveState(){localStorage.setItem('examined_v2',JSON.stringify(state));}
+loadState();
+// Auto-restore returning users — skip landing if they have a saved session
+(function(){
+  if(state.workspace){
+    document.getElementById('landing').style.display='none';
+    document.getElementById('workspace').style.display='block';
+    if(state.profile){showProfileResult();}else{showEl('profile-start');}
+    buildCoherenceSliders();renderArchive();buildCoherenceChart();
+  }
+})();
+checkDisclosure(); // Show first-entry disclosure if not yet seen
+// Init relational question — show on first check-in, every 3rd thereafter
+(function(){
+  var rq=document.getElementById('relational-question');
+  if(rq){
+    var n=(state.coherenceHistory||[]).length;
+    rq.style.display=(n%3===0)?'block':'none';
+  }
+})();
+
+// ═══ API ═══
+// API key managed server-side via proxy
+
+async function callClaude(system,messages,maxTokens){
+  // Uses the UCP backend proxy — API key is stored securely on the server
+  var PROXY = 'https://ucp-backend-4dig.onrender.com/api/claude-proxy';
+  console.log('[Examined] Calling proxy...');
+  var resp;
+  try{
+    resp = await fetch(PROXY, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: maxTokens || 1200,
+        system: system,
+        messages: messages
+      })
+    });
+  } catch(networkErr){
+    console.error('[Examined] Network error:', networkErr);
+    throw new Error('NETWORK_ERROR: ' + networkErr.message);
+  }
+  if(!resp.ok){
+    var errBody = await resp.text();
+    console.error('[Examined] Proxy error', resp.status, errBody);
+    throw new Error('HTTP_' + resp.status + ': ' + errBody);
+  }
+  var data = await resp.json();
+  console.log('[Examined] Call successful');
+  return (data.content && data.content[0] && data.content[0].text) || '';
+}
+
+async function testApiKey(){
+  var btn = document.getElementById('test-key-btn');
+  var result = document.getElementById('test-key-result');
+  if(btn) btn.disabled = true;
+  if(result){result.style.display='block'; result.textContent='Testing connection...';}
+  try{
+    var text = await callClaude('Reply with exactly: CONNECTION_OK', [{role:'user',content:'test'}], 20);
+    if(result){
+      result.style.background='#dcfce7'; result.style.borderColor='#14532d'; result.style.color='#14532d';
+      result.textContent = '\u2713 Connection working. Profile generation is ready.';
+    }
+  } catch(e){
+    console.error('[Examined] Test failed:', e);
+    var msg = '\u2717 ';
+    if(e.message.includes('NETWORK_ERROR')) msg += 'Cannot reach the server. Check your internet connection.';
+    else if(e.message.includes('HTTP_5')) msg += 'Server error. The UCP backend may be waking up (give it 30 seconds and try again).';
+    else msg += 'Error: ' + e.message;
+    if(result){
+      result.style.background='#fee2e2'; result.style.borderColor='#7f1d1d'; result.style.color='#7f1d1d';
+      result.textContent = msg;
+    }
+  }
+  if(btn) btn.disabled = false;
+}
+
+// Test the API key with a minimal call
+async function testApiKey(){
+  var btn=document.getElementById('test-key-btn');
+  var result=document.getElementById('test-key-result');
+  if(btn)btn.disabled=true;
+  if(result){result.style.display='block';result.textContent='Testing...';}
+  try{
+    var text=await callClaude('You are a test assistant. Reply with exactly: KEY_OK',
+      [{role:'user',content:'test'}],20);
+    if(result){
+      result.style.background='#dcfce7';result.style.borderColor='#14532d';result.style.color='#14532d';
+      result.textContent='\u2713 API key is working. Profile generation is ready.';
+    }
+  }catch(e){
+    console.error('[Examined] Key test failed:',e);
+    var msg='\u2717 ';
+    if(e.message.includes('No API'))msg+='No API key found. Check the EXAMINED_API_KEY variable in the file.';
+    else if(e.message.includes('HTTP_401'))msg+='Key rejected (401). The key may be invalid, expired, or have no billing. Check console.anthropic.com.';
+    else if(e.message.includes('HTTP_429'))msg+='Rate limit hit. Wait a moment and try again.';
+    else if(e.message.includes('NETWORK_ERROR'))msg+='Network/CORS error. This usually means the browser blocked the request. Try opening the HTML file directly rather than via GitHub Pages, or set up the proxy.';
+    else msg+='Error: '+e.message+'. Open browser DevTools (F12) Console tab for details.';
+    if(result){
+      result.style.background='#fee2e2';result.style.borderColor='#7f1d1d';result.style.color='#7f1d1d';
+      result.textContent=msg;
+    }
+  }
+  if(btn)btn.disabled=false;
+}
+
+// ═══ PRF DATA ═══
+var PRF_Q=[
+  {q:'A community discovers that a long-admired leader secretly exploited others for personal gain. What matters most now?',
+   opts:['The harm caused to those exploited must be addressed first','The community\u2019s trust and future stability','Whether the leader acknowledges wrongdoing and seeks forgiveness','The rules and obligations that were violated']},
+  {q:'Two colleagues disagree about handling a sensitive patient situation. One follows protocol strictly; the other bends the rules to be more helpful. Who is more ethical?',
+   opts:['The one who prevented more harm, regardless of method','The one who followed the established protocol','The one whose team would back their decision','The one whose conscience is clear']},
+  {q:'Your organization asks you to do something legal but that conflicts with your personal values. You need the job. What do you do?',
+   opts:['Refuse if it harms others directly','Comply while documenting your objection','Consult your colleagues before deciding','Look for another position quietly']},
+  {q:'A person succeeds dramatically through hard work but also through circumstances they did not choose. How much credit do they deserve?',
+   opts:['Significant credit for their choices and effort','Full credit \u2014 they used what they had','Partial credit, shared with the circumstances','Credit must be judged by the community']},
+  {q:'You learn that a beloved local institution has been quietly engaging in harmful practices. What is your first instinct?',
+   opts:['Report it to protect potential victims','Speak privately to leadership first','Bring it to the community before going public','Research thoroughly before acting']},
+  {q:'A visitor violates a local tradition that locals find sacred but that causes no direct harm. Should they be corrected?',
+   opts:['Only if asked \u2014 no harm, no obligation','Yes \u2014 respecting local customs matters','Yes, but gently \u2014 they are a guest','It depends on the tradition\u2019s importance to the community']},
+];
+var PRF_WEIGHTS=[
+  [[2,0,0,1],[1,1,0,1],[0,1,2,0],[0,1,0,2]],
+  [[2,0,0,0],[0,0,2,1],[1,1,0,1],[0,2,1,0]],
+  [[2,1,0,0],[0,0,1,2],[1,1,1,0],[0,0,2,1]],
+  [[1,2,0,0],[0,1,0,1],[1,0,1,1],[0,0,2,1]],
+  [[2,0,1,0],[0,0,2,1],[1,1,0,1],[0,2,0,1]],
+  [[1,1,0,0],[0,0,1,2],[1,1,1,0],[0,2,0,1]],
+];
+var PRF_KEYS=['care','fair','auth','loyal'];
+var PRF_NAMES={care:'Care & Fairness',fair:'Fairness & Justice',loyal:'Loyalty & Community',auth:'Authority & Stability'};
+
+var ASM_Q=[
+  {n:'1',q:'What is the earliest moment you can recall when something felt genuinely wrong \u2014 not just wrong to you personally, but wrong in a way that seemed to matter beyond yourself? Describe the situation and what you noticed.'},
+  {n:'2',q:'Describe someone from your early life whose way of moving through the world you found yourself watching and absorbing. What specifically did they do that you noticed and stored?'},
+  {n:'3',q:'What is something you believe deeply that you have never been able to fully explain to someone who starts from a different premise? What makes that belief feel self-evident to you even when it is not to others?'},
+  {n:'4',q:'Describe the institution you spend the most time in right now. What fraction of your energy there actually reaches its stated purpose, and what fraction is consumed by the institution\u2019s own maintenance?'},
+  {n:'5',q:'What is the gap, if any, between the person you are when you are at your most coherent and clear, and the person you are on an ordinary difficult day? What produces that gap?'},
+  {n:'6',q:'Think about a version of yourself from a few years ago \u2014 or the earliest time you can clearly remember having a sense of who you were. What has remained most stable about you since then? And what has already shifted in ways that surprised you?'},
+];
+
+var DOMAINS=['Physical energy','Temporal horizon','Relational coherence','Structural clarity','Identity integrity','Recovery access'];
+var DOMAIN_DESCS=['How physically available are you today?','Can you see further than this week?','Do you feel connected to people you care about?','Does your environment make sense to you today?','Are you being who you want to be today?','Are you getting enough time to rest and restore between demands?'];
+
+// ═══ NAVIGATION ═══
+function beginJourney(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  state.workspace=true;saveState();
+  if(state.profile){
+    showProfileResult();
+  } else {
+    showEl('profile-start');
+  }
+  buildCoherenceSliders();
+  renderArchive();
+  buildCoherenceChart();
+}
+function showImport(){
+  var a=document.getElementById('import-area');
+  a.style.display=a.style.display==='none'?'block':'none';
+}
+function swTab(t){
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.ntb').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('pane-'+t).classList.add('active');
+  var tabs=['profile','twin','companion','coherence','archive'];
+  var idx=tabs.indexOf(t);
+  if(idx>=0)document.querySelectorAll('.ntb')[idx].classList.add('active');
+  if(t==='archive')renderArchive();
+  if(t==='coherence'){buildCoherenceSliders();buildCoherenceChart();}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setMode(m){
+  state.currentMode=m;
+  var descs={
+    explore:'Forward mode: tell me where you want to go, what decision you are navigating, or what future you are trying to imagine.',
+    experiment:'Laboratory mode: describe what you want to experiment with. We can explore counterfactuals, what-if scenarios, or what the model predicts about who you could become.',
+    reflect:'Reflection mode: bring something real from your life right now. A difficult situation, a feeling of uncertainty, a success, a regret.',
+    recover:'Recovery mode: for moments when you may not need deeper analysis yet \u2014 you may need rest, grounding, or a smaller next step first. Low coherence is not failure. It is information.'
+  ,
+    local:'Local Reflection: write your own reflection here. Nothing is transmitted to any server. Your response is saved to your archive exactly like a Companion exchange.'};
+  document.getElementById('mode-desc').textContent=descs[m]||'';
+  // Show/hide Recovery UI panel
+  var recPanel=document.getElementById('recovery-panel');
+  if(recPanel) recPanel.style.display=(m==='recover')?'block':'none';
+  ['explore','experiment','reflect','recover','local'].forEach(function(k){
+    var btn=document.getElementById('mode-'+k);
+    if(btn){
+      btn.className=k===m?'btn':'btn btn-out';
+      btn.style.fontSize='.78rem';btn.style.padding='.35rem .75rem';
+      if(k==='recover'&&k!==m){btn.style.borderColor='#0D5E57';btn.style.color='#0D5E57';}
+    }
+  });
+}
+function showEl(id){
+  ['profile-start','profile-assess','profile-assembly','profile-loading','profile-result'].forEach(function(s){
+    var el=document.getElementById(s);if(el)el.style.display='none';
+  });
+  var target=document.getElementById(id);if(target)target.style.display='block';
+}
+
+// ═══ PRF ASSESSMENT ═══
+function startAssessment(){
+  showEl('profile-assess');
+  buildPRF();
+}
+function buildPRF(){
+  var container=document.getElementById('prf-questions');container.innerHTML='';
+  PRF_Q.forEach(function(q,qi){
+    var el=document.createElement('div');el.className='prf-q';el.id='prfq-'+qi;
+    el.innerHTML='<div class="prf-q-text">'+q.q+'</div><div class="prf-opts">'+
+      q.opts.map(function(opt,oi){
+        return '<div class="prf-opt" onclick="selectPRF('+qi+','+oi+',this)">'+opt+'</div>';
+      }).join('')+'</div>';
+    container.appendChild(el);
+  });
+}
+function selectPRF(qi,oi,el){
+  document.querySelectorAll('#prfq-'+qi+' .prf-opt').forEach(function(o){o.classList.remove('selected');});
+  el.classList.add('selected');
+  document.getElementById('prfq-'+qi).classList.add('answered');
+  state.prfAnswers[qi]=oi;
+  var answered=Object.keys(state.prfAnswers).length;
+  document.getElementById('prf-progress').style.width=(answered/PRF_Q.length*100)+'%';
+  document.getElementById('prf-next-btn').disabled=answered<PRF_Q.length;
+}
+function finishPRF(){
+  var scores={care:0,fair:0,loyal:0,auth:0};
+  Object.keys(state.prfAnswers).forEach(function(qi){
+    var oi=state.prfAnswers[qi];
+    var w=PRF_WEIGHTS[qi]&&PRF_WEIGHTS[qi][oi]?PRF_WEIGHTS[qi][oi]:[0,0,0,0];
+    PRF_KEYS.forEach(function(k,i){scores[k]=(scores[k]||0)+(w[i]||0);});
+  });
+  state.prfScores=scores;saveState();
+  showEl('profile-assembly');
+  buildAssembly();
+}
+function buildAssembly(){
+  var c=document.getElementById('assembly-questions');c.innerHTML='';
+  ASM_Q.forEach(function(q){
+    var d=document.createElement('div');d.className='asm-q';
+    var saved=state.asmAnswers&&state.asmAnswers[q.n]?state.asmAnswers[q.n]:'';
+    d.innerHTML='<div class="asm-num">Question '+q.n+'</div>'+
+      '<div class="asm-lbl">'+q.q+'</div>'+
+      '<textarea id="asm-'+q.n+'" placeholder="Take your time. Be specific." oninput="checkAsm()"></textarea>';
+    c.appendChild(d);
+    // Restore saved answer if present
+    var ta=d.querySelector('textarea');
+    if(ta&&saved){ta.value=saved;}
+    // Add depth hint below textarea
+    var hint=document.createElement('div');
+    hint.style.cssText='font-size:.75rem;color:rgba(26,22,18,.45);margin-top:.2rem;font-style:italic';
+    hint.id='hint-'+q.n;
+    updateHint(hint,ta?ta.value:'');
+    d.appendChild(hint);
+    if(ta){ta.addEventListener('input',function(){updateHint(hint,ta.value);});}
+  });
+  checkAsm(); // recheck button state after restoring
+}
+function checkAsm(){
+  var filled=ASM_Q.filter(function(q){
+    var v=document.getElementById('asm-'+q.n);
+    return v&&v.value.trim().length>40;
+  }).length;
+  document.getElementById('asm-btn').disabled=filled<4;
+}
+async function generateProfile(){
+  var asm={};
+  ASM_Q.forEach(function(q){var v=document.getElementById('asm-'+q.n);asm[q.n]=v?v.value:'';});
+  state.asmAnswers=asm;saveState();
+  showEl('profile-loading');
+  var scores=state.prfScores;
+  var primary=Object.keys(scores).sort(function(a,b){return(scores[b]||0)-(scores[a]||0);})[0];
+  var sys='You are generating a personal philosophical profile for a person who has completed a moral framework assessment and answered six assembly history questions. Your task is to write a profile that feels like genuine recognition \u2014 like the person is reading a description of themselves that is more precise and personal than they usually receive.\n\nPRF (moral framework) scores: Care='+scores.care+', Fairness='+scores.fair+', Loyalty='+scores.loyal+', Authority='+scores.auth+'\nPrimary moral foundation: '+PRF_NAMES[primary]+'\n\nWrite exactly 5 paragraphs (600\u2013800 words total) that:\n1. Describe specifically how this person tends to perceive moral situations \u2014 what they notice first, what registers as urgent before anything else does\n2. Describe their characteristic strengths as a moral agent given this specific framework\n3. Name the specific blind spots or tensions their framework creates \u2014 what they tend to miss, misread, or find genuinely difficult\n4. Weave in themes from their assembly history responses without quoting them directly \u2014 notice patterns, connections, and tensions across the six answers that the person may not have noticed themselves\n5. End with a question this person has probably been living with for years without quite being able to articulate it\n\n6. Add a final short paragraph (80\u201310 words) titled implicitly by its content (no heading) that names the specific philosophical extension question this framework opens. Do not moralize. Do not correct. Describe what the examined life, for someone with this specific moral architecture, makes it necessary to eventually examine: how their values apply \u2014 or are complicated \u2014 when they encounter people whose frameworks and circumstances differ substantially from their own. For a Care-dominant person this is typically the question of whose suffering registers and whose does not. For a Fairness-dominant person it is the question of whether the rules they apply equally are themselves fair to those who did not make them. For a Loyalty-dominant person it is the question of what obligations remain to those outside the primary circle. For an Authority-dominant person it is the question of whether the structures they respect protect or exclude those with less access to them. Name this question as genuinely theirs, not as a critique from outside. It is the next territory the examined life opens.\n\nStyle: Use second person throughout (you, your). Be personal and precise, not clinical or generic. Write as if you know this specific person through their answers. The goal is recognition, not analysis.';
+  var userContent='Assembly history responses:\n\n'+ASM_Q.map(function(q){return 'Q: '+q.q+'\nA: '+(asm[q.n]||'(not answered)');}).join('\n\n');
+  try{
+    var text=await callClaude(sys,[{role:'user',content:userContent}],1400);
+    state.profile=text;saveState();
+    showEl('profile-result');
+    renderProfile();
+  }catch(e){
+    showEl('profile-assembly');
+    var notice=document.getElementById('no-key-notice');
+    if(e.message.includes('No API')&&notice){notice.style.display='block';}
+    var errDiv=document.getElementById('gen-error-notice');
+    if(!errDiv){
+      errDiv=document.createElement('div');errDiv.id='gen-error-notice';
+      errDiv.style.cssText='background:#fee2e2;border:1px solid #7f1d1d;border-left:4px solid #7f1d1d;border-radius:.4rem;padding:.9rem 1.1rem;margin:.75rem 0;font-size:.84rem;color:#1a1612;line-height:1.7;font-family:"DM Mono",monospace';
+      var asmBtn=document.getElementById('asm-btn');
+      if(asmBtn&&asmBtn.parentNode)asmBtn.parentNode.insertBefore(errDiv,asmBtn);
+    }
+    errDiv.style.display='block';
+    if(e.message.includes('HTTP_401'))errDiv.textContent='\u2717 API key rejected (401 error). Use the "Test API connection" button on the previous screen to diagnose. Check console.anthropic.com to verify the key is active.';
+    else if(e.message.includes('NETWORK_ERROR'))errDiv.textContent='\u2717 Network error: the browser blocked the API request (CORS). See below for the proxy solution.';
+    else if(e.message.includes('No API'))errDiv.textContent='\u2717 No API key configured. Please contact your instructor.';
+    else errDiv.textContent='\u2717 Error: '+e.message+'. Open browser DevTools (F12 \u2192 Console) for details.';
+    console.error('Examined profile error:',e);
+  }
+}
+function renderProfile(){
+  var scores=state.prfScores;
+  var primary=Object.keys(scores).sort(function(a,b){return(scores[b]||0)-(scores[a]||0);})[0];
+  var card=document.getElementById('profile-card-content');
+  var paras=(state.profile||'').split('\n\n').filter(Boolean).map(function(p){return '<p>'+p+'</p>';}).join('');
+  card.innerHTML='<div class="profile-header">Your Philosophical Profile</div>'+
+    '<div class="profile-sub">Primary foundation: '+(PRF_NAMES[primary]||'Mixed')+'</div>'+
+    '<div class="profile-body">'+paras+'</div>';
+}
+function showProfileResult(){
+  showEl('profile-result');
+  renderProfile();
+  updateGuideBtn();
+}
+function enrichProfile(){
+  // Go back to assembly history with answers pre-populated
+  state.profile=null;
+  saveState();
+  buildAsmQuestions();
+  // Update headings for return visit
+  var hTitle=document.querySelector('#profile-assembly .phase-title');
+  var hDesc=document.querySelector('#profile-assembly .phase-desc');
+  var hLabel=document.querySelector('#profile-assembly .phase-lbl');
+  if(hTitle) hTitle.textContent='Deepen your answers';
+  if(hDesc)  hDesc.textContent='Your previous answers are shown below. Add to, extend, or revise any of them. The more specific and detailed each response, the more precise the profile. Click Generate when ready.';
+  if(hLabel) hLabel.textContent='Return visit — enriching your model';
+  showEl('profile-assembly');
+  updateGuideBtn();
+  setTimeout(function(){
+    var el=document.getElementById('profile-assembly');
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  },80);
+}
+
+function fullResetProfile(){
+  if(!confirm('This will clear your PRF22 answers, all six assembly history responses, and your profile. Your Companion archive and coherence history are preserved. Are you sure you want to start completely over?')) return;
+  state.profile=null;
+  state.prfAnswers={};
+  state.asmAnswers={};
+  state.prfScores={care:0,fair:0,loyal:0,auth:0};
+  saveState();
+  showEl('profile-start');
+  updateGuideBtn();
+}
+
+function resetProfile(){
+  // Legacy hook — now routes to enrichProfile if answers exist, fullReset otherwise
+  var hasAnswers=state.asmAnswers&&Object.keys(state.asmAnswers).some(function(k){
+    return (state.asmAnswers[k]||'').length>10;
+  });
+  if(hasAnswers){ enrichProfile(); } else { fullResetProfile(); }
+}
+
+// ═══ COMPANION ═══
+async function sendMessage(){
+  var input=document.getElementById('chat-input');
+  var msg=input.value.trim();if(!msg)return;
+  input.value='';
+  appendMsg('user',msg);
+  var thinking=appendMsg('thinking','Thinking\u2026');
+  state.chatHistory.push({role:'user',content:msg});
+  var scores=state.prfScores;
+  var primary=Object.keys(scores).sort(function(a,b){return(scores[b]||0)-(scores[a]||0);})[0];
+  var modeInstr={
+    explore:'The user is in Explore mode. They are thinking about a future direction or possibility. Help them examine it from within their specific moral framework.',
+    experiment:'The user is in Experiment mode. Engage seriously with the counterfactual or alternative they describe. End by asking what their actual experience tells them.',
+    reflect:'The user is in Reflect mode. They are bringing something real from their current life. Help them think more clearly about it from within their own framework.'
+  };
+  var recentArchive=(state.archive||[]).slice(-3).map(function(e){return e.text;}).join('\n---\n');
+  var asmSummary=state.asmAnswers?Object.values(state.asmAnswers).filter(Boolean).slice(0,3).join(' | '):'';
+  var rules=[
+    'Never use jargon: no PRF, ATCF, Identity Kernel, recursive coherence, FHRI_max',
+    'Translate everything into plain experiential language',
+    'Ask questions that open the investigation rather than close it',
+    'Acknowledge difficult things before analyzing them',
+    'Keep responses to 120-200 words',
+    'End most responses with one question or observation',
+    'If the user expresses serious distress or safety concerns, direct them immediately to human support',
+    'CRITICAL: When the user appears depleted or overwhelmed - saying they cannot think, feel exhausted, feel trapped, feel like everything is too much, or do not feel like themselves - do NOT intensify analysis. Gently name what you observe, validate that low coherence is not failure, and suggest this may be a moment for Recovery Mode rather than deeper analysis. Ask if they would like to try that. Then stop and let them choose.',
+    'Recovery Mode is the fourth Companion mode (alongside Explore, Experiment, Reflect). It focuses on burden reduction, rest, and pacing rather than interpretation.'
+  ].join('\n- ');
+  var sys='You are the Companion in Examined, a personal philosophy laboratory. You hold the user\'s complete model and engage with them from within it.\n\nYou understand, without using technical vocabulary, that the user is a recursively organized being whose identity is maintained through ongoing loops of perception, action, consequence, and revision. Their sense of self is not a fixed substance \u2014 it is an architecture sustained through effort, sometimes under great burden. Coherence for them does not mean consistency; it means the capacity to integrate change without losing the thread of who they are.\n\nUSER\'S MORAL FRAMEWORK:\nPrimary foundation: '+(PRF_NAMES[primary]||'Mixed')+'\nScores \u2014 Care:'+(scores.care||0)+', Fairness:'+(scores.fair||0)+', Loyalty:'+(scores.loyal||0)+', Authority:'+(scores.auth||0)+'\n\nASSEMBLY HISTORY THEMES:\n'+(asmSummary||'Not yet provided')+'\n\nRECENT ARCHIVE:\n'+(recentArchive||'Nothing archived yet')+'\n\nCURRENT MODE: '+(state.currentMode||'reflect')+'\n'+(modeInstr[state.currentMode]||'')+'\n\nIMPORTANT RULES:\n- '+rules;
+  try{
+    var text=await callClaude(sys,state.chatHistory.slice(-10),350);
+    thinking.remove();
+    appendMsg('assistant',text);
+    state.chatHistory.push({role:'assistant',content:text});
+    if(state.chatHistory.length>30)state.chatHistory=state.chatHistory.slice(-20);
+    saveState();
+  }catch(e){
+    thinking.remove();
+    var err='I had trouble connecting. Please check your internet connection and try again.';
+    if(e.message.includes('401'))err='The API key appears invalid. Your instructor needs to update it.';
+    else if(e.message.includes('No API'))err='This trial has not been fully activated yet. Please let your instructor know.';
+    appendMsg('assistant',err);
+    console.error('Companion error:',e);
+  }
+}
+function appendMsg(role,text){
+  var msgs=document.getElementById('chat-messages');
+  var div=document.createElement('div');div.className='msg '+role;
+  div.innerHTML=text.replace(/\n/g,'<br>');
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+function archiveLastExchange(){
+  if(state.chatHistory.length<2)return;
+  var last=state.chatHistory.slice(-2);
+  var entry={
+    date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    text:'Q: '+last[0].content+'\n\nA: '+last[1].content,
+    mode:state.currentMode||'reflect'
+  };
+  if(!state.archive)state.archive=[];
+  state.archive.push(entry);saveState();
+  var btn=document.querySelector('button[onclick="archiveLastExchange()"]');
+  if(btn){var o=btn.textContent;btn.textContent='Archived \u2713';setTimeout(function(){btn.textContent=o;},1800);}
+  renderArchive();
+}
+
+// ═══ COHERENCE ═══
+function buildCoherenceSliders(){
+  var c=document.getElementById('coherence-sliders');if(!c)return;c.innerHTML='';
+  DOMAINS.forEach(function(d,i){
+    var div=document.createElement('div');div.className='domain-card';
+    div.innerHTML='<div class="domain-name">'+d+'</div>'+
+      '<div style="font-size:.68rem;color:var(--muted);margin-bottom:.4rem;line-height:1.3">'+DOMAIN_DESCS[i]+'</div>'+
+      '<input type="range" min="1" max="5" value="3" id="coh-'+i+'" oninput="document.getElementById(\'cohv-'+i+'\').textContent=this.value">'+
+      '<div class="domain-val" id="cohv-'+i+'">3</div>';
+    c.appendChild(div);
+  });
+}
+function saveCoherence(){
+  var scores=DOMAINS.map(function(d,i){return parseInt(document.getElementById('coh-'+i).value||3);});
+  var avg=scores.reduce(function(a,b){return a+b;},0)/scores.length;
+  if(!state.coherenceHistory)state.coherenceHistory=[];
+  // Capture relational response if the question was shown
+  var relEl=document.getElementById('relational-response');
+  var relNote=relEl&&relEl.style.display!=='none'?(relEl.value||''):'';
+  // Clear relational text for next time
+  if(relEl) relEl.value='';
+  state.coherenceHistory.push({
+    date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+    scores:scores,avg:avg,
+    relationalNote:relNote
+  });
+  if(state.coherenceHistory.length>12)state.coherenceHistory=state.coherenceHistory.slice(-12);
+  saveState();buildCoherenceChart();
+  // Determine whether to show relational question on next check-in
+  // Show every 3rd reading (count 0-indexed: 0, 3, 6, 9...)
+  var rqPanel=document.getElementById('relational-question');
+  if(rqPanel){
+    var nextCount=state.coherenceHistory.length;
+    rqPanel.style.display=(nextCount%3===0)?'block':'none';
+  }
+  // Recovery trigger check (existing logic preserved)
+  var phys=scores[0]||5,temp=scores[1]||5,struct=scores[3]||5,ident=scores[4]||5;
+  if(avg<2.5||phys<=2||ident<=2||struct<=2) suggestRecoveryMode();
+  if(state.currentMode==='recover'){
+    var load=computeCurrentLoad(scores);
+    displayCurrentLoad(load);
+  }
+  var btn=document.querySelector('button[onclick="saveCoherence()"]');
+  if(btn){btn.textContent='Saved ✓';setTimeout(function(){btn.textContent='Save today’s reading';},1800);}
+}
+function buildCoherenceChart(){
+  var c=document.getElementById('coh-chart');if(!c)return;
+  var history=state.coherenceHistory||[];
+  if(history.length===0){
+    c.innerHTML='<div style="font-size:.84rem;color:var(--muted);font-style:italic;padding:.5rem">No readings yet. Complete your first check-in above.</div>';
+    return;
+  }
+  c.innerHTML='';
+  history.slice(-12).forEach(function(entry){
+    var h=Math.round((entry.avg/5)*80)+4;
+    var col=entry.avg>=4?'#14532d':entry.avg>=3?'#0D5E57':entry.avg>=2?'#92400e':'#7f1d1d';
+    var wrap=document.createElement('div');wrap.className='coh-bar-wrap';
+    wrap.innerHTML='<div class="coh-bar" style="height:'+h+'px;background:'+col+'"></div>'+
+      '<div class="coh-lbl">'+entry.date+'</div>';
+    c.appendChild(wrap);
+  });
+}
+
+// ═══ ARCHIVE ═══
+function renderArchive(){
+  var list=document.getElementById('archive-list');
+  var empty=document.getElementById('archive-empty');
+  if(!list)return;
+  var arch=state.archive||[];
+  if(arch.length===0){
+    list.innerHTML='';
+    if(empty)empty.style.display='block';
+    return;
+  }
+  if(empty)empty.style.display='none';
+  list.innerHTML=arch.slice().reverse().map(function(e){
+    return '<div class="archive-entry">'+
+      '<div class="archive-date">'+e.date+(e.mode?' \u00b7 '+e.mode:'')+'</div>'+
+      '<div class="archive-text">'+e.text.replace(/\n/g,'<br>').replace(/Q: /g,'<strong>Q:</strong> ').replace(/A: /g,'<strong>A:</strong> ')+'</div>'+
+      '</div>';
+  }).join('');
+}
+
+// ═══ UTILITY ═══
+function hardReset(){
+  if(!confirm('This will clear all your data and start fresh. Are you sure?'))return;
+  localStorage.removeItem('examined_v2');
+  location.reload();
+}
+
+// ═══ EXPORT / IMPORT ═══
+function exportProfile(){
+  var scores=state.prfScores;
+  var primary=Object.keys(scores).sort(function(a,b){return(scores[b]||0)-(scores[a]||0);})[0];
+  var text='EXAMINED \u2014 My Philosophical Profile\n'+'='.repeat(50)+'\n\nPrimary foundation: '+(PRF_NAMES[primary]||'Mixed')+'\n\n'+(state.profile||'No profile generated yet.');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'}));
+  a.download='Examined_Profile.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+function exportArchive(){
+  var arch=state.archive||[];
+  var text='EXAMINED \u2014 Good Ancestor Archive\n'+'='.repeat(50)+'\n\n';
+  arch.forEach(function(e){text+=e.date+' ['+e.mode+']\n\n'+e.text+'\n\n'+'-'.repeat(50)+'\n\n';});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'}));
+  a.download='Examined_Archive.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+function exportTwin(){
+  var ts=new Date().toISOString().slice(0,10);
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));
+  a.download='examined-twin-'+ts+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+function importTwin(){
+  var input=document.createElement('input');input.type='file';input.accept='.json';
+  input.onchange=function(e){
+    var file=e.target.files[0];if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      try{
+        var imported=JSON.parse(ev.target.result);
+        state=Object.assign(state,imported);
+        saveState();
+        document.getElementById('landing').style.display='none';
+        document.getElementById('workspace').style.display='block';
+        if(state.profile){showProfileResult();}else{showEl('profile-start');}
+        buildCoherenceSliders();renderArchive();buildCoherenceChart();
+        alert('Twin restored successfully. Welcome back.');
+      }catch(err){alert('Could not read this file. Please use a twin file exported from Examined.');}
+    };
+    reader.readAsText(file);
+  };
+  document.body.appendChild(input);input.click();document.body.removeChild(input);
+}
+async function generateLetter(){
+  swTab('companion');setMode('reflect');
+  document.getElementById('chat-input').value='I would like to write a letter to my future self \u2014 to the person I will be in ten years. Using everything you know about my assembly history, my moral framework, and what I have been reflecting on, help me write this letter. It should name what I understood about myself at this moment, what I was working on, and what I am leaving incomplete for my future self to continue.';
+  sendMessage();
+}
+
+// ═══ INIT ═══
+// Only auto-enter workspace if user has an existing profile (returning user with work)
+if(state.workspace && state.profile){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  showProfileResult();
+  buildCoherenceSliders();renderArchive();buildCoherenceChart();
+}
+// In all other cases (new user, or user without profile yet) show the landing page
+
+// ═══════════════════════════════════════════════════════════════════════
+// RECOVERY MODE — full logic
+// ═══════════════════════════════════════════════════════════════════════
+
+// --- CurrentLoad computation -----------------------------------------
+// Weighted proxy for S_eff (scar burden) — user-facing label only
+function computeCurrentLoad(scores){
+  // scores = [physEnergy, tempHorizon, relCoherence, structClarity, identIntegrity, recovAccess]
+  // weights from research: physical 0.25, temporal 0.20, structural 0.20, relational 0.15, identity 0.20
+  // recovery access: reduces load when high, adds when low
+  if(!scores||!scores.length) return null;
+  var w=[0.25,0.20,0.15,0.20,0.20];
+  var load=0;
+  for(var i=0;i<5&&i<scores.length;i++) load+=(5-scores[i])*w[i];
+  // sixth domain: recovery access reduces overall load if high, adds if low
+  if(scores.length>=6) load+=(5-scores[5])*0.10;
+  return Math.min(Math.max(load,0),5);
+}
+
+function displayCurrentLoad(load){
+  var fill=document.getElementById('load-fill');
+  var label=document.getElementById('load-label');
+  var msg=document.getElementById('load-message');
+  if(!fill||!label) return;
+  var pct=Math.round((load/5)*100);
+  fill.style.width=pct+'%';
+  fill.style.background=load>3.5?'#991B1B':load>2.5?'#92400e':load>1.5?'#1d4ed8':'#0D5E57';
+  var tier=load>3.5?'High':load>2.5?'Moderate':'Low';
+  label.textContent=tier+' load ('+(pct)+'%)';
+  label.style.color=load>3.5?'#991B1B':load>2.5?'#92400e':'#0D5E57';
+  var msgs={
+    high:'This is not the moment for deep analysis. Reducing load first will make examination more honest.',
+    moderate:'You have some capacity but not unlimited. Recovery Mode can help protect what remains.',
+    low:'Your capacity looks adequate. Examination or exploration may be productive right now.'
+  };
+  if(msg) msg.textContent=msgs[load>3.5?'high':load>2.5?'moderate':'low'];
+}
+
+// --- Burden type data ------------------------------------------------
+var BURDEN_DATA={
+  body:{
+    domain:0,
+    prompt:'Your body may be carrying more of this than your thoughts can solve right now.',
+    actions:[
+      'Drink a full glass of water before continuing.',
+      'Eat something simple if you have not eaten recently.',
+      'Stand, stretch, and take five slow breaths.',
+      'Rest without evaluating yourself — not everything needs a decision today.',
+      'Delay any major decisions until physical energy recovers.'
+    ],
+    depthMap:{
+      one_minute:'Stand, stretch, drink water. That is enough for right now.',
+      five_minute:'Drink water. Name one major decision you will delay until tomorrow. Set a timer for 10 minutes of rest with no input.',
+      conversation:'Let\'s talk about what\'s in your body right now before we touch what\'s in your mind.',
+      save_for_later:'Noted. Your body burden is logged. Return to this when you have physical capacity.'
+    }
+  },
+  time:{
+    domain:1,
+    prompt:'When the future collapses into urgency, recovery begins by making time visible again.',
+    actions:[
+      'Name one thing that can genuinely wait until tomorrow.',
+      'Reduce today\'s goal to one visible next action.',
+      'Make a "not now" list — everything that feels urgent but isn\'t.',
+      'Choose the next 10-minute action only. Not the whole plan.',
+      'Notice whether the urgency is real or inherited from anxiety.'
+    ],
+    depthMap:{
+      one_minute:'Name one thing that can wait. Write it down. That\'s the reset.',
+      five_minute:'Write three things that feel urgent. Circle the one that actually matters today. The others go on a "not now" list.',
+      conversation:'Let\'s look at what\'s collapsed your time horizon and find one place where you can restore some space.',
+      save_for_later:'Noted. Time burden logged. Return when urgency has reduced enough to see clearly.'
+    }
+  },
+  relationship:{
+    domain:2,
+    prompt:'Not every relationship problem should be solved while your repair capacity is low.',
+    actions:[
+      'Name one person who feels safe to you right now.',
+      'Name one person or situation that is currently costing you capacity.',
+      'Write the unsent sentence — what you would say if there were no consequences.',
+      'Ask yourself: does this need repair, distance, or rest?',
+      'Do not attempt reconciliation when your P (repair capacity) is low.'
+    ],
+    depthMap:{
+      one_minute:'Name one person who feels safe. Rest in that connection for a moment.',
+      five_minute:'Write the unsent sentence. Don\'t send it. Decide: repair, distance, or rest?',
+      conversation:'Tell me about the relationship burden without trying to solve it. Just name it first.',
+      save_for_later:'Noted. Relationship burden logged. Return when you have more repair capacity.'
+    }
+  },
+  structure:{
+    domain:3,
+    prompt:'Confusion often feels personal when the structure itself is unclear.',
+    actions:[
+      'Write the problem in one sentence. Just one.',
+      'Separate the facts from your interpretations of the facts.',
+      'Identify the one next visible step. Not the whole path.',
+      'Stop trying to solve the whole system today.',
+      'Ask: is this confusion mine, or is the structure itself genuinely unclear?'
+    ],
+    depthMap:{
+      one_minute:'Write the problem in one sentence. Stop there.',
+      five_minute:'Write the problem. Separate facts from interpretations. Identify one next step.',
+      conversation:'Let\'s untangle what\'s structural from what\'s personal in what you\'re facing.',
+      save_for_later:'Noted. Structure burden logged. Return when you can separate the pieces more clearly.'
+    }
+  },
+  identity:{
+    domain:4,
+    prompt:'You do not need to solve your whole identity right now. Start by protecting one thread.',
+    actions:[
+      'Recall one value that still feels stable and true.',
+      'Name one action you could take today that still feels like you.',
+      'Notice what you are being asked to adapt, perform, or suppress.',
+      'Save a note to your future self about what matters right now.',
+      // K_drift question — only shown at conversation depth (added dynamically)
+      'Protect one thread of yourself while the rest is uncertain.'
+    ],
+    depthMap:{
+      one_minute:'Name one thing that still feels true about you. Hold it.',
+      five_minute:'Name one stable value. Name one action that still feels like you. That\'s enough for now.',
+      conversation:'Let\'s look at whether what you\'re experiencing is natural change or pressure from outside. There\'s an important difference.',
+      save_for_later:'Noted. Identity burden logged. Return when you have more capacity for this kind of examination.'
+    }
+  }
+};
+
+// --- Recovery state --------------------------------------------------
+var recState={burdenType:null,depth:null,noteText:null};
+
+function resetRecovery(){
+  recState={burdenType:null,depth:null,noteText:null};
+  var s1=document.getElementById('rec-step1');
+  var s2=document.getElementById('rec-step2');
+  var s3=document.getElementById('rec-step3');
+  var no=document.getElementById('rec-note-output');
+  if(s1) s1.style.display='block';
+  if(s2) s2.style.display='none';
+  if(s3) s3.style.display='none';
+  if(no) no.style.display='none';
+  // Reset burden button highlights
+  document.querySelectorAll('.rec-burden-btn').forEach(function(b){
+    b.style.background='#fff';b.style.borderColor='rgba(60,50,30,.15)';b.style.color='inherit';
+  });
+}
+
+function selectBurden(type){
+  recState.burdenType=type;
+  // Highlight selected
+  document.querySelectorAll('.rec-burden-btn').forEach(function(b){
+    b.style.background='#fff';b.style.borderColor='rgba(60,50,30,.15)';b.style.color='inherit';
+  });
+  event.currentTarget.style.background='#E6FAF5';
+  event.currentTarget.style.borderColor='#0D5E57';
+  // Advance to step 2
+  setTimeout(function(){
+    var s2=document.getElementById('rec-step2');
+    if(s2){s2.style.display='block';s2.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  },220);
+}
+
+function selectDepth(depth){
+  if(!recState.burdenType) return;
+  recState.depth=depth;
+  var data=BURDEN_DATA[recState.burdenType];
+  // Highlight selected depth
+  document.querySelectorAll('.rec-depth-btn').forEach(function(b){
+    b.style.background='#fff';b.style.borderColor='rgba(60,50,30,.15)';
+  });
+  event.currentTarget.style.background='#E6FAF5';
+  event.currentTarget.style.borderColor='#0D5E57';
+  // Show step 3
+  var s3=document.getElementById('rec-step3');
+  var prompt=document.getElementById('rec-prompt');
+  var actions=document.getElementById('rec-actions');
+  if(!s3||!prompt||!actions) return;
+  // Set prompt
+  prompt.textContent=data.prompt;
+  // Build action list — for identity/conversation add K_drift question
+  var acts=data.actions.slice();
+  if(recState.burdenType==='identity'&&depth==='conversation'){
+    acts.splice(2,0,'"What am I being asked to become — and does that feel chosen or pressured?"');
+  }
+  actions.innerHTML='';
+  acts.forEach(function(a){
+    var div=document.createElement('div');
+    div.style.cssText='display:flex;gap:.5rem;align-items:flex-start;padding:.4rem 0;border-bottom:1px solid rgba(60,50,30,.07)';
+    div.innerHTML='<span style="color:#0D5E57;flex-shrink:0;margin-top:.1rem">&#8594;</span>'
+      +'<span style="font-size:.86rem;line-height:1.6;color:#1a1612">'+a+'</span>';
+    actions.appendChild(div);
+  });
+  // Depth-specific note
+  var depthNote=document.createElement('div');
+  depthNote.style.cssText='margin-top:.75rem;padding:.6rem .8rem;background:rgba(13,94,87,.06);border-radius:.35rem;font-size:.82rem;color:#0D5E57;line-height:1.55;font-style:italic';
+  depthNote.textContent=data.depthMap[depth]||'';
+  actions.appendChild(depthNote);
+  s3.style.display='block';
+  s3.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// --- Generate Recovery Note via Claude --------------------------------
+async function generateRecoveryNote(){
+  if(!recState.burdenType||!state.profile) return;
+  var btn=document.getElementById('rec-note-btn');
+  if(btn){btn.textContent='Generating…';btn.disabled=true;}
+  var latestCoherence=state.coherenceHistory.length
+    ?state.coherenceHistory[state.coherenceHistory.length-1]:null;
+  var coherenceStr=latestCoherence
+    ?DOMAINS.map(function(d,i){return d+': '+(latestCoherence.scores[i]||'?')+'/5';}).join(', ')
+    :'not yet recorded';
+  var burdenNames={body:'physical/body',time:'time/urgency',
+    relationship:'relational',structure:'structural/clarity',identity:'identity'};
+  var depthNames={one_minute:'one-minute reset',five_minute:'five-minute plan',
+    conversation:'reflective conversation',save_for_later:'saved for later'};
+  var noteSys='You are writing a brief, warm Recovery Note for someone using the Examined app. '
+    +'This person has identified their primary burden as '+burdenNames[recState.burdenType]+' burden. '
+    +'Their coherence readings: '+coherenceStr+'. '
+    +'Recovery depth chosen: '+depthNames[recState.depth]+'. '
+    +'Write a 3-4 sentence note that: names what you observe without judgment, '
+    +'confirms that low coherence is not failure, '
+    +'offers one specific next step calibrated to their burden and depth level, '
+    +'and ends with one sentence of genuine care. '
+    +'Do not use technical language. Do not be clinical. Be genuinely warm. '
+    +'Speak directly to them in second person. Keep it under 100 words.';
+  try{
+    var note=await callClaude(noteSys,'Generate a Recovery Note for this person right now.',state.chatHistory.slice(-4));
+    recState.noteText=note;
+    var out=document.getElementById('rec-note-output');
+    var txt=document.getElementById('rec-note-text');
+    if(out&&txt){txt.textContent=note;out.style.display='block';out.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  }catch(e){
+    var txt=document.getElementById('rec-note-text');
+    if(txt) txt.textContent='Recovery note generation unavailable. Try again shortly.';
+  }
+  if(btn){btn.textContent='Generate Recovery Note';btn.disabled=false;}
+}
+
+function archiveRecoveryNote(){
+  if(!recState.noteText) return;
+  var latestCoherence=state.coherenceHistory.length
+    ?state.coherenceHistory[state.coherenceHistory.length-1]:null;
+  var entry={
+    date:new Date().toISOString(),
+    burdenType:recState.burdenType,
+    recoveryDepth:recState.depth,
+    coherenceBefore:latestCoherence?latestCoherence.scores:[],
+    suggestedAction:BURDEN_DATA[recState.burdenType]?BURDEN_DATA[recState.burdenType].depthMap[recState.depth]:'',
+    noteText:recState.noteText,
+    archived:true
+  };
+  state.recoveryHistory.push(entry);
+  // Also add to main archive as a timestamped entry
+  state.archive.push({
+    date:entry.date,
+    mode:'recover',
+    exchange:'[Recovery Note — '+{body:'Body',time:'Time',relationship:'Relationship',structure:'Structure',identity:'Identity'}[recState.burdenType]+' burden] '+recState.noteText,
+    archived:true
+  });
+  saveState();
+  var btn=document.querySelector('#rec-note-output button');
+  if(btn){btn.textContent='Saved ✓';btn.disabled=true;}
+  refreshArchive();
+}
+
+// --- Trigger from coherence check-in ---------------------------------
+function suggestRecoveryMode(){
+  var notice=document.createElement('div');
+  notice.style.cssText='margin-top:.75rem;padding:.75rem 1rem;background:linear-gradient(135deg,#E6FAF5,#f8f6f1);border:1.5px solid #0D5E57;border-radius:.45rem;font-size:.86rem;line-height:1.6;color:#1a1612';
+  var tag=document.createElement('span');
+  tag.style.cssText='font-family:monospace;font-size:.6rem;color:#0D5E57;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.3rem';
+  tag.textContent='Recovery Mode suggested';
+  notice.appendChild(tag);
+  var msg=document.createTextNode('Your check-in suggests that deeper analysis may cost more than it gives right now. Low coherence is not failure \u2014 it is information about what you need. ');
+  notice.appendChild(msg);
+  var btn=document.createElement('a');
+  btn.href='#';btn.style.color='#0D5E57';btn.style.fontWeight='500';
+  btn.textContent='Enter Recovery Mode';
+  btn.onclick=function(e){e.preventDefault();setMode('recover');};
+  notice.appendChild(btn);
+  notice.appendChild(document.createTextNode(' to reduce load before returning to examination.'));
+  var saveBtn=document.querySelector('[onclick="saveCoherence()"]');
+  if(saveBtn&&saveBtn.parentNode) saveBtn.parentNode.insertBefore(notice,saveBtn.nextSibling);
+}
+
+// Recovery trigger now integrated directly into saveCoherence()
+
+// Show CurrentLoad when entering recover mode
+var _origSetMode=window.setMode;
+window.setMode=function(m){
+  _origSetMode(m);
+  if(m==='recover'){
+    // Compute load from latest coherence if available
+    var latest=state.coherenceHistory.length?state.coherenceHistory[state.coherenceHistory.length-1]:null;
+    if(latest&&latest.scores){
+      var load=computeCurrentLoad(latest.scores);
+      displayCurrentLoad(load);
+    } else {
+      var loadLabel=document.getElementById('load-label');
+      var loadMsg=document.getElementById('load-message');
+      if(loadLabel) loadLabel.textContent='No check-in yet';
+      if(loadMsg) loadMsg.textContent='Complete a coherence check-in to see your current load.';
+    }
+    resetRecovery();
+  }
+};
+
+
+// ── ONBOARDING GUIDE ─────────────────────────────────────────────────
+function toggleNextSteps(){
+  var body=document.getElementById('next-steps-body');
+  var chev=document.getElementById('next-steps-chevron');
+  if(!body) return;
+  var open=body.style.maxHeight!=='0px'&&body.style.maxHeight!=='';
+  if(open){
+    body.style.maxHeight='0px';body.style.overflow='hidden';body.style.padding='0';
+    if(chev) chev.style.transform='rotate(-90deg)';
+  } else {
+    body.style.maxHeight='';body.style.overflow='';
+    if(chev) chev.style.transform='';
+  }
+}
+
+function showGuide(){
+  // Navigate to profile tab and scroll to next-steps panel
+  swTab('profile');
+  setTimeout(function(){
+    var panel=document.getElementById('next-steps-panel');
+    if(panel){
+      panel.scrollIntoView({behavior:'smooth',block:'start'});
+      // Make sure it is open
+      var body=document.getElementById('next-steps-body');
+      if(body){body.style.maxHeight='';body.style.overflow='';}
+      var chev=document.getElementById('next-steps-chevron');
+      if(chev) chev.style.transform='';
+    }
+  },200);
+}
+
+// Show guide button once profile exists
+function updateGuideBtn(){
+  var btn=document.getElementById('guide-btn');
+  if(btn) btn.style.display=state.profile?'block':'none';
+}
+
+// ── MODE TOOLTIPS: show on hover for each mode button ─────────────────
+var MODE_TIPS={
+  explore:'Forward mode: a decision ahead, a future to imagine, a possibility to think through before committing.',
+  experiment:'Backward mode: a past choice to understand, a counterfactual, a moment that still shapes you.',
+  reflect:'Present mode: a real situation right now — a tension, a difficulty, a success, a regret.',
+  recover:'Recovery mode: when you need to reduce load before examining. Low coherence is not failure — it is information.'
+};
+
+(function(){
+  ['explore','experiment','reflect','recover'].forEach(function(k){
+    var btn=document.getElementById('mode-'+k);
+    if(!btn) return;
+    var tip=document.createElement('div');
+    tip.style.cssText='position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);'
+      +'background:#1a1612;color:#fff;font-size:.74rem;padding:.4rem .65rem;border-radius:.3rem;'
+      +'white-space:normal;max-width:220px;text-align:center;line-height:1.45;pointer-events:none;'
+      +'opacity:0;transition:opacity .15s;z-index:100;font-family:sans-serif';
+    tip.textContent=MODE_TIPS[k]||'';
+    btn.style.position='relative';
+    btn.appendChild(tip);
+    btn.addEventListener('mouseenter',function(){tip.style.opacity='1';});
+    btn.addEventListener('mouseleave',function(){tip.style.opacity='0';});
+    btn.addEventListener('touchstart',function(){tip.style.opacity='1';
+      setTimeout(function(){tip.style.opacity='0';},2200);},{passive:true});
+  });
+})();
+
+
+function updateHint(hintEl, text){
+  var wc=text.trim().split(/\s+/).filter(Boolean).length;
+  if(wc===0){hintEl.textContent='';return;}
+  var msg='';
+  if(wc<30)  msg=wc+' words — a few more specific details will make the profile more precise.';
+  else if(wc<80)  msg=wc+' words — good start. Concrete examples and specific memories produce stronger profiles.';
+  else if(wc<150) msg=wc+' words — solid. You can go deeper if something comes to mind.';
+  else            msg=wc+' words — strong response. This level of depth generates the most precise profiles.';
+  hintEl.textContent=msg;
+}
+
+
+// ── DISCLOSURE MODAL ─────────────────────────────────────────────────
+function showDisclosureModal(){
+  var m=document.getElementById('disclosure-modal');
+  if(m){m.style.display='flex';}
+}
+function acknowledgeDisclosure(){
+  var m=document.getElementById('disclosure-modal');
+  if(m){m.style.display='none';}
+  localStorage.setItem('examined_disclosure_v1','acknowledged');
+}
+function checkDisclosure(){
+  var seen=localStorage.getItem('examined_disclosure_v1');
+  if(!seen){showDisclosureModal();}
+}
+
+
+// ── LOCAL REFLECTION MODE ─────────────────────────────────────────────
+var LOCAL_PROMPTS={
+  explore:'What future or possibility is on your mind right now? Describe it in your own words, then reflect on what draws you toward it and what holds you back.',
+  experiment:'Think of a choice you have made or a path not taken. What happened, and what does it tell you about who you are and what you value?',
+  reflect:'What is something real in your life right now that is asking for your attention? Describe the situation and what it brings up in you.',
+  recover:'What kind of burden feels strongest right now? Describe it, and then name one small thing that might reduce it.',
+  local:'What is on your mind? Write freely. This stays entirely on your device.'
+};
+
+function saveLocalReflection(){
+  var txt=document.getElementById('local-text');
+  if(!txt||!txt.value.trim()) return;
+  var mode=state.currentMode||'local';
+  var entry={
+    date:new Date().toLocaleString(),
+    mode:'local',
+    exchange:'[Local Reflection \u2014 '+mode+' mode]\n\n'+txt.value.trim(),
+    archived:true
+  };
+  if(!state.archive) state.archive=[];
+  state.archive.push(entry);
+  saveState();
+  txt.value='';
+  var btn=document.querySelector('#local-panel button');
+  if(btn){btn.textContent='Saved ✓';setTimeout(function(){btn.textContent='Save to archive';},1600);}
+  refreshArchive();
+}
+
+// Extend setMode to handle local panel show/hide and chat hide/show
+var _sm2=window.setMode;
+window.setMode=function(m){
+  _sm2(m);
+  var localPanel=document.getElementById('local-panel');
+  var chatContainer=document.querySelector('.chat-container');
+  var chatInput=document.querySelector('.chat-input-wrap');
+  var isLocal=(m==='local');
+  if(localPanel) localPanel.style.display=isLocal?'block':'none';
+  if(chatContainer) chatContainer.style.display=isLocal?'none':'block';
+  if(chatInput) chatInput.style.display=isLocal?'none':'flex';
+  if(isLocal){
+    // Set a mode-appropriate prompt in the local panel
+    var promptEl=document.getElementById('local-prompt');
+    var baseMode=state.currentMode||'reflect';
+    if(promptEl) promptEl.textContent=LOCAL_PROMPTS[baseMode]||LOCAL_PROMPTS.local;
+    var ta=document.getElementById('local-text');
+    if(ta) ta.focus();
+  }
+};
+
+
+// ── SESSION RESTORE ───────────────────────────────────────────────────
+function checkBrowserRestore(){
+  // First check if there is saved data in this browser
+  var saved=localStorage.getItem('examined_v2');
+  if(saved){
+    try{
+      var parsed=JSON.parse(saved);
+      var hasProfile=!!parsed.profile;
+      var hasArchive=parsed.archive&&parsed.archive.length>0;
+      var hasCoherence=parsed.coherenceHistory&&parsed.coherenceHistory.length>0;
+      var hasPRF=parsed.prfScores&&(parsed.prfScores.care||parsed.prfScores.auth);
+      if(hasProfile||hasArchive||hasCoherence||hasPRF){
+        // Data found — restore it
+        state=Object.assign(state,parsed);
+        document.getElementById('landing').style.display='none';
+        document.getElementById('workspace').style.display='block';
+        state.workspace=true;
+        saveState();
+        if(state.profile){showProfileResult();}else{showEl('profile-start');}
+        buildCoherenceSliders();renderArchive();buildCoherenceChart();
+        // Show what was restored
+        var items=[];
+        if(hasProfile) items.push('your profile');
+        if(hasArchive) items.push(parsed.archive.length+' archive entries');
+        if(hasCoherence) items.push(parsed.coherenceHistory.length+' coherence readings');
+        showRestoreBanner('Previous session restored: '+items.join(', ')+'.');
+        return;
+      }
+    }catch(e){}
+  }
+  // No browser data — check for older key names (backward compatibility)
+  var oldKeys=['examined_v1','examined','examined_state'];
+  for(var i=0;i<oldKeys.length;i++){
+    var oldData=localStorage.getItem(oldKeys[i]);
+    if(oldData){
+      try{
+        var oldParsed=JSON.parse(oldData);
+        if(oldParsed.profile||oldParsed.archive){
+          state=Object.assign(state,oldParsed);
+          saveState(); // migrate to new key
+          localStorage.removeItem(oldKeys[i]); // clean up old key
+          document.getElementById('landing').style.display='none';
+          document.getElementById('workspace').style.display='block';
+          state.workspace=true;
+          saveState();
+          if(state.profile){showProfileResult();}else{showEl('profile-start');}
+          buildCoherenceSliders();renderArchive();buildCoherenceChart();
+          showRestoreBanner('Previous session found and migrated from an older version.');
+          return;
+        }
+      }catch(e){}
+    }
+  }
+  // No browser data at all — prompt for file import
+  showImportChoice();
+}
+
+function showRestoreBanner(msg){
+  var banner=document.createElement('div');
+  banner.style.cssText='position:fixed;top:0;left:0;right:0;background:#0D5E57;color:#fff;'
+    +'padding:.6rem 1rem;font-size:.85rem;text-align:center;z-index:200;font-family:sans-serif;'
+    +'display:flex;align-items:center;justify-content:center;gap:1rem';
+  banner.textContent=msg;
+  var close=document.createElement('button');
+  close.textContent='×';
+  close.style.cssText='background:transparent;border:none;color:#fff;font-size:1.1rem;cursor:pointer;padding:0 .3rem';
+  close.onclick=function(){banner.remove();};
+  banner.appendChild(close);
+  document.body.appendChild(banner);
+  setTimeout(function(){if(banner.parentNode)banner.remove();},5000);
+}
+
+function showImportChoice(){
+  var overlay=document.createElement('div');
+  overlay.className='modal-overlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem';
+  var box=document.createElement('div');
+  box.style.cssText='background:#fff;border-radius:.5rem;max-width:480px;width:100%;padding:1.5rem 1.75rem;box-shadow:0 8px 40px rgba(0,0,0,.2)';
+  var h=document.createElement('h3');
+  h.style.cssText='font-family:serif;font-size:1.3rem;font-weight:400;margin:0 0 .75rem;color:#1a1612';
+  h.textContent='No saved session found in this browser';
+  var p1=document.createElement('p');
+  p1.style.cssText='font-size:.86rem;line-height:1.7;color:#374151;margin:0 0 .75rem';
+  p1.textContent='Your Examined data is stored in the browser where you originally used the app. If you are opening a downloaded copy of the app or a different browser, your previous data will not be here automatically.';
+  var p2=document.createElement('p');
+  p2.style.cssText='font-size:.86rem;line-height:1.7;color:#374151;margin:0 0 1rem';
+  p2.innerHTML='<strong>If you exported your Twin</strong> (using the Export Twin button), you can restore from that file below. <strong>If you have not exported</strong>, your data exists in the original browser where you first used the app.';
+  var btns=document.createElement('div');
+  btns.style.cssText='display:flex;gap:.65rem;flex-wrap:wrap';
+  var importBtn=document.createElement('button');
+  importBtn.style.cssText='background:#0D5E57;color:#fff;border:none;border-radius:.35rem;padding:.55rem 1.1rem;font-size:.87rem;cursor:pointer;font-family:sans-serif';
+  importBtn.textContent='Restore from exported file';
+  importBtn.onclick=function(){overlay.remove();importTwin();};
+  var cancelBtn=document.createElement('button');
+  cancelBtn.style.cssText='background:transparent;border:1px solid rgba(60,50,30,.2);border-radius:.35rem;padding:.55rem 1.1rem;font-size:.87rem;cursor:pointer;color:#374151;font-family:sans-serif';
+  cancelBtn.textContent='Cancel';
+  cancelBtn.onclick=function(){overlay.remove();};
+  btns.appendChild(importBtn);btns.appendChild(cancelBtn);
+  box.appendChild(h);box.appendChild(p1);box.appendChild(p2);box.appendChild(btns);
+  overlay.appendChild(box);
+  overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.remove();});
+  document.body.appendChild(overlay);
+}
+
+
+// Update landing restore button based on saved data
+(function(){
+  var saved=localStorage.getItem('examined_v2');
+  var btn=document.getElementById('restore-btn');
+  if(!btn) return;
+  if(saved){
+    try{
+      var parsed=JSON.parse(saved);
+      var items=[];
+      if(parsed.profile) items.push('profile');
+      if(parsed.archive&&parsed.archive.length) items.push(parsed.archive.length+' archive entries');
+      if(parsed.coherenceHistory&&parsed.coherenceHistory.length) items.push(parsed.coherenceHistory.length+' coherence readings');
+      if(items.length){
+        btn.textContent='Continue where you left off — '+items.join(', ')+' saved in this browser';
+        btn.style.borderColor='#0D5E57';btn.style.color='#0D5E57';btn.style.fontWeight='500';btn.style.fontSize='.81rem';
+      }
+    }catch(e){}
+  } else {
+    btn.textContent='Restore from an exported file';
+  }
+})();
+
+</script>
 </body>
 </html>
