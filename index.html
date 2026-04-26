@@ -579,7 +579,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
     <div style="font-size:.8rem;color:rgba(26,22,18,.4);margin-top:.75rem;line-height:1.7">
       Philosophy Lab Corporation &bull; Examined &bull; 2026<br>
-      <a href="#" onclick="showDisclosureModal();return false;" style="color:#0D5E57">View initial disclosure again</a>
+      <a href="#" onclick="showDisclosureModal();return false;" style="color:#0D5E57">View initial disclosure again</a> &bull; <a href="#" onclick="resetDisclosure();return false;" style="color:rgba(26,22,18,.35);font-size:.75rem">Reset disclosure</a>
     </div>
   </div>
 
@@ -607,33 +607,9 @@ function loadState(){
 }
 function saveState(){localStorage.setItem('examined_v2',JSON.stringify(state));}
 loadState();
-// Auto-restore returning users — skip landing if they have a saved session
-(function(){
-  if(state.workspace){
-    document.getElementById('landing').style.display='none';
-    document.getElementById('workspace').style.display='block';
-    // Use beginJourney path so tabs, nav and all UI initialize correctly
-    if(state.profile){
-      showProfileResult();
-      // Activate profile tab nav button
-      document.querySelectorAll('.ntb').forEach(function(b){b.classList.remove('active');});
-      var ntbs=document.querySelectorAll('.ntb');
-      if(ntbs[0]) ntbs[0].classList.add('active');
-    } else {
-      showEl('profile-start');
-    }
-    buildCoherenceSliders();renderArchive();buildCoherenceChart();
-  }
-})();
-checkDisclosure(); // Show first-entry disclosure if not yet seen
-// Init relational question — show on first check-in, every 3rd thereafter
-(function(){
-  var rq=document.getElementById('relational-question');
-  if(rq){
-    var n=(state.coherenceHistory||[]).length;
-    rq.style.display=(n%3===0)?'block':'none';
-  }
-})();
+// Session restore runs at end of script after all variables are defined
+// checkDisclosure() called in initApp() at end of script
+// Relational question init in initApp()
 
 // ═══ API ═══
 // API key managed server-side via proxy
@@ -1711,27 +1687,84 @@ function showImportChoice(){
 }
 
 
-// Update landing restore button based on saved data
-(function(){
-  var saved=localStorage.getItem('examined_v2');
-  var btn=document.getElementById('restore-btn');
-  if(!btn) return;
-  if(saved){
-    try{
-      var parsed=JSON.parse(saved);
-      var items=[];
-      if(parsed.profile) items.push('profile');
-      if(parsed.archive&&parsed.archive.length) items.push(parsed.archive.length+' archive entries');
-      if(parsed.coherenceHistory&&parsed.coherenceHistory.length) items.push(parsed.coherenceHistory.length+' coherence readings');
-      if(items.length){
-        btn.textContent='Continue where you left off — '+items.join(', ')+' saved in this browser';
-        btn.style.borderColor='#0D5E57';btn.style.color='#0D5E57';btn.style.fontWeight='500';btn.style.fontSize='.81rem';
-      }
-    }catch(e){}
-  } else {
-    btn.textContent='Restore from an exported file';
+// Landing restore button updated in initApp() below
+
+
+// ═══════════════════════════════════════════════════════════════════════
+// initApp: runs AFTER all variable and function declarations
+// This is the only place that touches the DOM on page load.
+// PRF_NAMES, PRF_Q, DOMAINS etc. are all defined by this point.
+// ═══════════════════════════════════════════════════════════════════════
+function initApp(){
+  // Show disclosure modal for first-time users
+  checkDisclosure();
+
+  // Update relational question visibility
+  var rq=document.getElementById('relational-question');
+  if(rq){
+    var n=(state.coherenceHistory||[]).length;
+    rq.style.display=(n%3===0)?'block':'none';
   }
-})();
+
+  // Update landing restore button text based on what is in the browser
+  var btn=document.getElementById('restore-btn');
+  if(btn){
+    var saved=localStorage.getItem('examined_v2');
+    if(saved){
+      try{
+        var parsed=JSON.parse(saved);
+        var items=[];
+        if(parsed.profile) items.push('profile');
+        if(parsed.archive&&parsed.archive.length) items.push(parsed.archive.length+' archive entries');
+        if(parsed.coherenceHistory&&parsed.coherenceHistory.length)
+          items.push(parsed.coherenceHistory.length+' coherence readings');
+        if(items.length){
+          btn.textContent='Continue where you left off — '+items.join(', ')+' saved in this browser';
+          btn.style.borderColor='#0D5E57';
+          btn.style.color='#0D5E57';
+          btn.style.fontWeight='500';
+          btn.style.fontSize='.81rem';
+        }
+      }catch(e){}
+    } else {
+      btn.textContent='Restore from an exported file';
+    }
+  }
+
+  // Auto-restore returning users — NOW safe because all vars are defined
+  if(state.workspace){
+    document.getElementById('landing').style.display='none';
+    document.getElementById('workspace').style.display='block';
+    if(state.profile){
+      showProfileResult();          // renderProfile() can now access PRF_NAMES safely
+      // Mark profile tab nav button as active
+      document.querySelectorAll('.ntb').forEach(function(b){b.classList.remove('active');});
+      var ntbs=document.querySelectorAll('.ntb');
+      if(ntbs[0]) ntbs[0].classList.add('active');
+    } else {
+      showEl('profile-start');
+    }
+    buildCoherenceSliders();        // DOMAINS now defined
+    renderArchive();
+    buildCoherenceChart();
+    updateGuideBtn();
+  }
+}
+
+// Run initApp after the script fully evaluates
+initApp();
+
+
+function resetDisclosure(){
+  localStorage.removeItem('examined_disclosure_v1');
+  var msg=document.createElement('div');
+  msg.style.cssText='position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);'
+    +'background:#374151;color:#fff;padding:.5rem 1rem;border-radius:.35rem;'
+    +'font-size:.82rem;z-index:300;font-family:sans-serif';
+  msg.textContent='Disclosure reset. It will show again on your next visit to this page.';
+  document.body.appendChild(msg);
+  setTimeout(function(){msg.remove();},3000);
+}
 
 </script>
 </body>
