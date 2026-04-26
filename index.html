@@ -612,7 +612,16 @@ loadState();
   if(state.workspace){
     document.getElementById('landing').style.display='none';
     document.getElementById('workspace').style.display='block';
-    if(state.profile){showProfileResult();}else{showEl('profile-start');}
+    // Use beginJourney path so tabs, nav and all UI initialize correctly
+    if(state.profile){
+      showProfileResult();
+      // Activate profile tab nav button
+      document.querySelectorAll('.ntb').forEach(function(b){b.classList.remove('active');});
+      var ntbs=document.querySelectorAll('.ntb');
+      if(ntbs[0]) ntbs[0].classList.add('active');
+    } else {
+      showEl('profile-start');
+    }
     buildCoherenceSliders();renderArchive();buildCoherenceChart();
   }
 })();
@@ -1144,15 +1153,7 @@ async function generateLetter(){
   sendMessage();
 }
 
-// ═══ INIT ═══
-// Only auto-enter workspace if user has an existing profile (returning user with work)
-if(state.workspace && state.profile){
-  document.getElementById('landing').style.display='none';
-  document.getElementById('workspace').style.display='block';
-  showProfileResult();
-  buildCoherenceSliders();renderArchive();buildCoherenceChart();
-}
-// In all other cases (new user, or user without profile yet) show the landing page
+// Session restore handled by IIFE above
 
 // ═══════════════════════════════════════════════════════════════════════
 // RECOVERY MODE — full logic
