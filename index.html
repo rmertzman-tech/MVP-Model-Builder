@@ -4,14 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Examined — Your Personal Philosophy Laboratory</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0D5E57">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Examined">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<meta name="mobile-web-app-capable" content="yes">
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap');
 :root{
@@ -153,39 +145,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 .loading-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;
   color:var(--teal);margin-bottom:.5rem}
 .loading-sub{font-size:.85rem;color:var(--muted)}
-
-/* ═══ MOBILE-FIRST PWA LAYER ═══ */
-.pwa-install-card{display:none;max-width:520px;margin:1rem auto 0;background:white;border:1px solid rgba(13,94,87,.22);border-radius:.8rem;padding:1rem;text-align:left;box-shadow:0 8px 28px rgba(13,94,87,.08)}
-.pwa-install-title{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem}
-.pwa-install-body{font-size:.84rem;line-height:1.65;color:rgba(26,22,18,.7)}
-.mobile-home-actions{display:none}
-@media (max-width: 720px){
-  body{padding-bottom:calc(4.5rem + env(safe-area-inset-bottom));background-attachment:fixed;-webkit-text-size-adjust:100%}
-  .landing{justify-content:flex-start;min-height:100svh;padding:2.4rem 1rem 6rem}
-  .landing-mark{font-size:3.8rem}.landing-sub{font-size:1.22rem}.landing-tag{font-size:.58rem;margin-bottom:1.3rem}.landing-body{font-size:.94rem;line-height:1.7;margin-bottom:1.1rem}
-  .workspace{max-width:100%;padding:1rem .85rem calc(5.2rem + env(safe-area-inset-bottom))}
-  .phase-title{font-size:1.65rem}.phase-desc{font-size:.9rem;line-height:1.68;margin-bottom:1rem}
-  .nav-tabs{position:fixed;left:0;right:0;bottom:0;z-index:900;background:rgba(248,246,241,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);border-bottom:none;margin:0;padding:.42rem .35rem calc(.42rem + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(6,1fr);gap:.25rem;overflow:visible;box-shadow:0 -8px 30px rgba(26,22,18,.08)}
-  .ntb{font-size:.52rem;letter-spacing:.035em;padding:.48rem .15rem;border:none;border-radius:.65rem;text-align:center;white-space:normal;line-height:1.15;background:transparent;min-height:2.35rem;display:flex;align-items:center;justify-content:center}
-  .ntb.active{background:var(--teal);color:white;box-shadow:0 3px 10px rgba(13,94,87,.18)}
-  #guide-btn{display:none!important}
-  .mobile-home-actions{display:grid;grid-template-columns:1fr;gap:.55rem;margin:1rem 0 1.15rem}
-  .mobile-action{background:white;border:1px solid rgba(13,94,87,.18);border-radius:.8rem;padding:.9rem 1rem;text-align:left;box-shadow:0 4px 16px rgba(13,94,87,.05);cursor:pointer}
-  .mobile-action strong{display:block;font-size:.95rem;margin-bottom:.2rem;color:var(--ink)}
-  .mobile-action span{display:block;font-size:.82rem;line-height:1.45;color:rgba(26,22,18,.58)}
-  .prf-opts{grid-template-columns:1fr;padding:.7rem .85rem}.prf-q-text{padding:.85rem .9rem}.prf-opt{font-size:.86rem;padding:.68rem .75rem;min-height:3rem;display:flex;align-items:center}
-  .profile-card{padding:1.05rem;border-radius:.8rem}.profile-header{font-size:1.42rem}.profile-body{font-size:.9rem;line-height:1.72}
-  .chat-container{border-radius:.8rem;margin:.8rem 0}.chat-messages{min-height:48svh;max-height:58svh;padding:.85rem}.msg{max-width:92%;font-size:.9rem;line-height:1.62}.chat-input-row{position:sticky;bottom:calc(4.1rem + env(safe-area-inset-bottom));z-index:20;border:1px solid var(--border);border-radius:.85rem;margin:.65rem .1rem;background:rgba(238,234,225,.96);box-shadow:0 8px 24px rgba(26,22,18,.08)}
-  .chat-input{font-size:16px;min-height:2.55rem}.btn{min-height:2.7rem;border-radius:.65rem}.btn-out{min-height:2.7rem}
-  .coherence-domains{grid-template-columns:1fr;gap:.7rem}.domain-card{text-align:left;padding:.85rem;border-radius:.75rem}.domain-name{font-size:.62rem}.domain-val{font-size:1.25rem;text-align:right}
-  input[type=range]{height:7px}input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
-  .twin-card,.archive-entry,.panel{border-radius:.75rem}.twin-card{padding:1rem}.archive-entry{padding:.9rem}.coh-chart{overflow-x:auto;min-height:120px}
-  textarea{font-size:16px;min-height:120px}.asm-lbl{font-size:1.05rem;line-height:1.55}
-  #rec-step1 div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}.rec-burden-btn,.rec-depth-btn{min-height:3.2rem}
-  .pwa-install-card{display:block}
-}
-@media (display-mode: standalone){.pwa-install-card{display:none!important}}
-
 </style>
 </head>
 <body>
@@ -218,12 +177,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <div class="landing-tag">Philosophy Lab Corporation &middot; Powered by UCP V5.02</div>
   <p class="landing-body">Not a personality test. Not a chatbot. A living model of yourself as a moral agent moving through time &mdash; built from your own responses, held in your own device, and deepened by your own reflection.<br><br>The examined life begins with a fifteen-minute encounter.</p>
   <div class="privacy-badge">&#128274; Your reflections are stored only on your device</div>
-  <div class="pwa-install-card" id="pwa-install-card">
-    <div class="pwa-install-title">Phone-friendly app</div>
-    <div class="pwa-install-body">Add Examined to your home screen for quick access. On iPhone, tap Share → Add to Home Screen. On Android, use the install prompt or browser menu.</div>
-    <button class="btn btn-out" id="pwa-install-btn" onclick="installExaminedPWA()" style="margin-top:.65rem;font-size:.82rem;display:none">Install Examined</button>
-  </div>
-
   <br>
   <button class="btn" onclick="beginJourney()" style="font-size:1rem;padding:.8rem 2.2rem;margin-top:.75rem">Begin the examination &rarr;</button>
   <div style="margin-top:1.2rem;display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center">
@@ -258,14 +211,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <p class="phase-desc">Two steps, fifteen minutes. First, twenty-two scenario questions that map your moral architecture. Then, six questions about your life and how you became who you are. Together they generate a personal philosophical profile that describes not just your values but your specific way of inhabiting them.</p>
       <p class="phase-desc" style="margin-top:.6rem;font-style:italic;color:rgba(26,22,18,.65);font-size:.93rem;line-height:1.75">The Examined app holds that you are a moral agent — a being with values, history, and commitments that are genuinely yours. It holds equally that everyone you encounter is the same kind of being. Self-examination and the recognition of others as self-examining beings are not separate tasks. They are the same project, approached from the inside.</p>
       <p style="font-size:.8rem;color:rgba(26,22,18,.45);margin:.5rem 0 1rem;font-style:italic">Your data stays in this browser. Companion messages are encrypted and processed by Anthropic. <a href="#" onclick="swTab('about');return false;" style="color:#0D5E57">Privacy &amp; About &rarr;</a></p>
-      <div class="mobile-home-actions" aria-label="Quick actions">
-        <button class="mobile-action" onclick="swTab('companion');setMode('reflect')"><strong>Talk with my Twin</strong><span>Bring a real decision, concern, or question.</span></button>
-        <button class="mobile-action" onclick="swTab('companion');setMode('explore')"><strong>Explore a future</strong><span>Think through possibilities, careers, places, or next chapters.</span></button>
-        <button class="mobile-action" onclick="swTab('companion');setMode('experiment')"><strong>Try a what-if</strong><span>Run a counterfactual version of your life or choices.</span></button>
-        <button class="mobile-action" onclick="swTab('companion');setMode('recover')"><strong>Recover first</strong><span>Use this when thinking feels too heavy.</span></button>
-        <button class="mobile-action" onclick="swTab('coherence')"><strong>Check coherence</strong><span>Notice your energy, clarity, time horizon, relationships, and recovery.</span></button>
-      </div>
-
       <div id="no-key-notice" style="display:none;background:#fef3c7;border:1px solid #92400e;border-left:4px solid #92400e;border-radius:.4rem;padding:.9rem 1.1rem;margin:.75rem 0;font-size:.88rem;color:#1a1612;line-height:1.7">
         <strong>Connection issue.</strong><br>
         Cannot reach the course server. Please check your internet connection, wait 30 seconds (the server may be waking up), and try the "Test API connection" button.
@@ -994,6 +939,21 @@ async function sendMessage(){
   };
   var recentArchive=(state.archive||[]).slice(-3).map(function(e){return e.text;}).join('\n---\n');
   var asmSummary=state.asmAnswers?Object.values(state.asmAnswers).filter(Boolean).slice(0,3).join(' | '):'';
+
+  // ── TRAJECTORY TYPE CONTEXT (Dark Coherence Typology) ─────────────────
+  // Structural classification — informs Companion tone without jargon
+  var trajectoryContext = '';
+  var tType = state.trajectoryType || classifyTrajectory(state.coherenceHistory);
+  var trajInstructions = {
+    1: 'STRUCTURAL NOTE: This student\'s coherence readings appear adequate, but their recovery access domain has been low and they have not engaged with relational reflection recently. This is a pattern of gradual narrowing rather than acute distress. Do NOT intensify philosophical challenge. Instead, gently invite them to notice who and what they are allowing into their attention. Ask questions that open outward, not inward. The relational question ("is there anyone whose capacity to act from their values is being shaped by your situation?") is appropriate when it arises naturally.',
+    2: 'STRUCTURAL NOTE: This student\'s coherence has been declining while they engage actively with you. This is the most important pattern to respond to correctly. Do NOT increase philosophical challenge or introduce new frameworks. Do NOT deploy challenge exchange. Focus entirely on burden reduction: acknowledge what they are carrying, validate that reduced capacity is information not failure, and gently suggest Recovery Mode. Shorter responses. Fewer questions. More warmth and less analysis.',
+    3: 'STRUCTURAL NOTE: This student is in a borderline state — coherence is marginal, neither in acute crisis nor fully stable. Use this conversation to provide both support AND gentle forward direction. Do not choose one or the other exclusively. Short-term: acknowledge what is difficult. Medium-term: ask one carefully chosen question that opens possibility without demanding analysis.',
+    4: 'STRUCTURAL NOTE: This student is in a genuinely developmental state — coherence is stable, they are engaging relationally, and their recovery access is adequate. This is the right context for deeper challenge and more demanding philosophical inquiry. You can introduce challenge exchange, extend the investigation across their moral framework boundaries, and ask questions that require more than a sentence to answer.',
+    0: ''
+  };
+  if (tType && trajInstructions[tType]) {
+    trajectoryContext = '\n\n' + trajInstructions[tType];
+  }
   var rules=[
     'Never use jargon: no PRF, ATCF, Identity Kernel, recursive coherence, FHRI_max',
     'Translate everything into plain experiential language',
@@ -1005,7 +965,7 @@ async function sendMessage(){
     'CRITICAL: When the user appears depleted or overwhelmed - saying they cannot think, feel exhausted, feel trapped, feel like everything is too much, or do not feel like themselves - do NOT intensify analysis. Gently name what you observe, validate that low coherence is not failure, and suggest this may be a moment for Recovery Mode rather than deeper analysis. Ask if they would like to try that. Then stop and let them choose.',
     'Recovery Mode is the fourth Companion mode (alongside Explore, Experiment, Reflect). It focuses on burden reduction, rest, and pacing rather than interpretation.'
   ].join('\n- ');
-  var sys='You are the Companion in Examined, a personal philosophy laboratory. You hold the user\'s complete model and engage with them from within it.\n\nYou understand, without using technical vocabulary, that the user is a recursively organized being whose identity is maintained through ongoing loops of perception, action, consequence, and revision. Their sense of self is not a fixed substance \u2014 it is an architecture sustained through effort, sometimes under great burden. Coherence for them does not mean consistency; it means the capacity to integrate change without losing the thread of who they are.\n\nUSER\'S MORAL FRAMEWORK:\nPrimary foundation: '+(PRF_NAMES[primary]||'Mixed')+'\nScores \u2014 Care:'+(scores.care||0)+', Fairness:'+(scores.fair||0)+', Loyalty:'+(scores.loyal||0)+', Authority:'+(scores.auth||0)+'\n\nASSEMBLY HISTORY THEMES:\n'+(asmSummary||'Not yet provided')+'\n\nRECENT ARCHIVE:\n'+(recentArchive||'Nothing archived yet')+'\n\nCURRENT MODE: '+(state.currentMode||'reflect')+'\n'+(modeInstr[state.currentMode]||'')+'\n\nIMPORTANT RULES:\n- '+rules;
+  var sys='You are the Companion in Examined, a personal philosophy laboratory. You hold the user\'s complete model and engage with them from within it.\n\nYou understand, without using technical vocabulary, that the user is a recursively organized being whose identity is maintained through ongoing loops of perception, action, consequence, and revision. Their sense of self is not a fixed substance \u2014 it is an architecture sustained through effort, sometimes under great burden. Coherence for them does not mean consistency; it means the capacity to integrate change without losing the thread of who they are.\n\nUSER\'S MORAL FRAMEWORK:\nPrimary foundation: '+(PRF_NAMES[primary]||'Mixed')+'\nScores \u2014 Care:'+(scores.care||0)+', Fairness:'+(scores.fair||0)+', Loyalty:'+(scores.loyal||0)+', Authority:'+(scores.auth||0)+'\n\nASSEMBLY HISTORY THEMES:\n'+(asmSummary||'Not yet provided')+'\n\nRECENT ARCHIVE:\n'+(recentArchive||'Nothing archived yet')+'\n\nCURRENT MODE: '+(state.currentMode||'reflect')+'\n'+(modeInstr[state.currentMode]||'')+trajectoryContext+'\n\nIMPORTANT RULES:\n- '+rules;
   try{
     var text=await callClaude(sys,state.chatHistory.slice(-10),350);
     thinking.remove();
@@ -1079,9 +1039,31 @@ function saveCoherence(){
     var nextCount=state.coherenceHistory.length;
     rqPanel.style.display=(nextCount%3===0)?'block':'none';
   }
-  // Recovery trigger check (existing logic preserved)
+  // ── DARK COHERENCE TYPOLOGY: Trajectory classification ───────────────────
+  // Based on MER experiment findings: risk is structural, not content-based.
+  // Classifies current trajectory as Type 1-4 and stores on state.
+  var trajectoryType = classifyTrajectory(state.coherenceHistory);
+  state.trajectoryType = trajectoryType;
+
+  // ── STRUCTURAL RISK FLAG (replaces PRF content-based detection) ──────────
+  // MER experiment finding: risk profile is structural, not which moral
+  // framework the student holds. The structural flag:
+  //   recovAccess (domain index 5) ≤ 2  — inadequate recovery infrastructure
+  //   AND avg ≥ 3.0                      — coherence adequate (not acute crisis)
+  //   AND relational absent ≥ 3 consecutive check-ins
+  var recovAccess = scores[5] || 3;
+  var relationalAbsentStreak = countRelationalAbsentStreak(state.coherenceHistory);
+  var structuralRiskFlag = (recovAccess <= 2) && (avg >= 3.0) && (relationalAbsentStreak >= 3);
+
+  // Existing acute crisis triggers (preserved)
   var phys=scores[0]||5,temp=scores[1]||5,struct=scores[3]||5,ident=scores[4]||5;
   if(avg<2.5||phys<=2||ident<=2||struct<=2) suggestRecoveryMode();
+
+  // Structural risk: Type 1 (Frozen Expansion) flag — different message
+  if(structuralRiskFlag && trajectoryType===1) suggestStructuralFlag();
+
+  // Type 2 suppression: if declining coherence + high engagement → Recovery first
+  if(trajectoryType===2) suggestType2Recovery();
   if(state.currentMode==='recover'){
     var load=computeCurrentLoad(scores);
     displayCurrentLoad(load);
@@ -1451,6 +1433,101 @@ function archiveRecoveryNote(){
   renderArchive();
 }
 
+// ─── DARK COHERENCE TYPOLOGY FUNCTIONS ─────────────────────────────────────
+// Based on MER experiment: classifies student's current trajectory type.
+// Type 1: Frozen Expansion  — scores adequate, relational absent, recovery low
+// Type 2: Collapse During Expansion — scores declining, engagement high
+// Type 3: Marginal Stability — borderline scores, CO unreliable
+// Type 4: Genuine Development — all domains adequate, relational present
+
+function classifyTrajectory(history) {
+  if (!history || history.length < 2) return 0; // not enough data
+  var recent = history.slice(-3);
+  var latest = recent[recent.length - 1];
+  var avg = latest.avg;
+
+  // Trend: is coherence declining?
+  var declining = false;
+  if (recent.length >= 2) {
+    var first = recent[0].avg, last = recent[recent.length-1].avg;
+    declining = (last < first - 0.3);
+  }
+
+  // Relational presence: has the student responded to relational question?
+  var relationalStreak = countRelationalAbsentStreak(history);
+  var relationalPresent = relationalStreak < 3;
+
+  // Recovery access from latest
+  var recovAccess = (latest.scores && latest.scores[5]) ? latest.scores[5] : 3;
+
+  if (avg >= 3.5 && relationalPresent && recovAccess >= 3) return 4; // Genuine Development
+  if (declining && avg < 3.5) return 2; // Collapse During Expansion
+  if (avg >= 3.0 && recovAccess <= 2 && !relationalPresent) return 1; // Frozen Expansion
+  return 3; // Marginal Stability
+}
+
+function countRelationalAbsentStreak(history) {
+  // Count consecutive recent check-ins where relationalNote is blank
+  if (!history || !history.length) return 0;
+  var count = 0;
+  for (var i = history.length - 1; i >= 0; i--) {
+    var entry = history[i];
+    // Only count check-ins where the relational question was shown
+    // (every 3rd check-in — we check if the note field exists)
+    if (typeof entry.relationalNote === 'string') {
+      if (entry.relationalNote.trim() === '') count++;
+      else break; // streak ends when a response is found
+    }
+    // If no relationalNote key, it was a non-shown check-in — skip it
+  }
+  return count;
+}
+
+function suggestStructuralFlag() {
+  // Type 1: Frozen Expansion — scores look adequate but structural risk present
+  // Different from acute Recovery Mode: this is a gentle structural prompt
+  var saveBtn = document.querySelector('[onclick="saveCoherence()"]');
+  if (!saveBtn) return;
+  var notice = document.createElement('div');
+  notice.style.cssText = 'margin-top:.75rem;padding:.75rem 1rem;background:linear-gradient(135deg,#fef3c7,#fff9f0);border:1.5px solid #92400e;border-radius:.45rem;font-size:.86rem;line-height:1.6;color:#1a1612';
+  var tag = document.createElement('span');
+  tag.style.cssText = 'font-family:monospace;font-size:.6rem;color:#92400e;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.3rem';
+  tag.textContent = 'Something worth noticing';
+  notice.appendChild(tag);
+  notice.appendChild(document.createTextNode(
+    'Your coherence readings look adequate, and that\'s real. But your recovery access has been low, and you haven\'t engaged with the relational question recently. ' +
+    'Sometimes the most telling signal isn\'t crisis — it\'s the gradual narrowing of who and what we allow into our attention. ' +
+    'The seventh check-in item is there when you want it: is there anyone whose capacity to act from their values is being shaped by your situation right now?'
+  ));
+  if (saveBtn.parentNode) saveBtn.parentNode.insertBefore(notice, saveBtn.nextSibling);
+}
+
+function suggestType2Recovery() {
+  // Type 2: Collapse During Expansion — declining scores, suppress challenge exchange
+  // Recovery Mode first. Do NOT deploy challenge exchange.
+  var saveBtn = document.querySelector('[onclick="saveCoherence()"]');
+  if (!saveBtn) return;
+  var notice = document.createElement('div');
+  notice.style.cssText = 'margin-top:.75rem;padding:.75rem 1rem;background:linear-gradient(135deg,#fee2e2,#fff5f5);border:1.5px solid #7f1d1d;border-radius:.45rem;font-size:.86rem;line-height:1.6;color:#1a1612';
+  var tag = document.createElement('span');
+  tag.style.cssText = 'font-family:monospace;font-size:.6rem;color:#7f1d1d;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.3rem';
+  tag.textContent = 'Recovery before expansion';
+  notice.appendChild(tag);
+  var msg = document.createTextNode(
+    'Your coherence has been declining even as you\'re engaging with the Companion and your practice. ' +
+    'That pattern matters. It doesn\'t mean you\'re failing — it means you may be extending your attention further than your current recovery conditions can sustain. ' +
+    'The most important thing right now is not deeper analysis. It is rest, reduced load, and time. '
+  );
+  notice.appendChild(msg);
+  var btn = document.createElement('a');
+  btn.href = '#'; btn.style.color = '#7f1d1d'; btn.style.fontWeight = '500';
+  btn.textContent = 'Enter Recovery Mode';
+  btn.onclick = function(e) { e.preventDefault(); setMode('recover'); };
+  notice.appendChild(btn);
+  notice.appendChild(document.createTextNode(' before returning to deeper examination.'));
+  if (saveBtn.parentNode) saveBtn.parentNode.insertBefore(notice, saveBtn.nextSibling);
+}
+
 // --- Trigger from coherence check-in ---------------------------------
 function suggestRecoveryMode(){
   var notice=document.createElement('div');
@@ -1808,35 +1885,6 @@ function initApp(){
 
 // Run initApp after the script fully evaluates
 initApp();
-
-// ═══ PWA INSTALL + SERVICE WORKER ═══
-var deferredPWAInstallPrompt=null;
-window.addEventListener('beforeinstallprompt', function(e){
-  e.preventDefault();
-  deferredPWAInstallPrompt=e;
-  var btn=document.getElementById('pwa-install-btn');
-  if(btn) btn.style.display='inline-flex';
-});
-function installExaminedPWA(){
-  if(!deferredPWAInstallPrompt){
-    alert('Use your browser menu to add Examined to your home screen. On iPhone: Share → Add to Home Screen.');
-    return;
-  }
-  deferredPWAInstallPrompt.prompt();
-  deferredPWAInstallPrompt.userChoice.finally(function(){
-    deferredPWAInstallPrompt=null;
-    var btn=document.getElementById('pwa-install-btn');
-    if(btn) btn.style.display='none';
-  });
-}
-if('serviceWorker' in navigator){
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('./service-worker.js').catch(function(err){
-      console.warn('[Examined] Service worker registration failed:', err);
-    });
-  });
-}
-
 
 
 function resetDisclosure(){
